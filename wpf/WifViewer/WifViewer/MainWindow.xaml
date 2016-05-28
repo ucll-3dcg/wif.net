@@ -8,6 +8,7 @@
         Title="MainWindow" Height="350" Width="525">
     <DockPanel>
         <Slider DockPanel.Dock="Top" Value="{Binding CurrentImageIndex.Value}" Minimum="0" Maximum="{Binding MaximumImageIndex.Value}" TickFrequency="1" />
+        <Button DockPanel.Dock="Bottom" Content="Refresh" Click="UI_OnRefresh" />
         <Image Source="{Binding CurrentImage.Value}" />
     </DockPanel>
 </Window>

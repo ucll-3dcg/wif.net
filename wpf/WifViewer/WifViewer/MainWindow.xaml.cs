@@ -39,5 +39,11 @@ namespace WifViewer
         public Cell<int> CurrentImageIndex { get; }
 
         public Cell<int> MaximumImageIndex { get; }
+
+        private void UI_OnRefresh(object sender, RoutedEventArgs e)
+        {
+            this.CurrentImageIndex.Value = 0;
+            this.frames.Value = WifLoader.Load(@"e:\temp\output\test.wif");
+        }
     }
 }
