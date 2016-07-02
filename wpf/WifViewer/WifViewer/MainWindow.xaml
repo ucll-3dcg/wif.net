@@ -7,8 +7,18 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="350" Width="525">
     <DockPanel>
-        <Slider DockPanel.Dock="Top" Value="{Binding CurrentImageIndex.Value}" Minimum="0" Maximum="{Binding MaximumImageIndex.Value}" TickFrequency="1" />
-        <Button DockPanel.Dock="Bottom" Content="Refresh" Click="UI_OnRefresh" />
+        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
+            <Slider Value="{Binding CurrentImageIndex.Value}" Minimum="0" Maximum="{Binding MaximumImageIndex.Value}" TickFrequency="1" Margin="10" Width="150" />
+            <TextBlock VerticalAlignment="Center">
+                <TextBlock.Text>
+                    <MultiBinding StringFormat="{}Frame {0} of {1}">
+                        <Binding Path="CurrentImageIndex.Value" />
+                        <Binding Path="MaximumImageIndex.Value" />
+                    </MultiBinding>
+                </TextBlock.Text>
+            </TextBlock>
+        </StackPanel>
+        <Button DockPanel.Dock="Bottom" Content="Refresh" Click="UI_OnRefresh" Padding="10" Margin="5" />
         <Image Source="{Binding CurrentImage.Value}" />
     </DockPanel>
 </Window>
