@@ -13,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace WifViewer
 {
@@ -23,16 +24,36 @@ namespace WifViewer
     {
         private readonly Cell<List<WriteableBitmap>> frames;
 
+        private readonly DispatcherTimer timer;
+
         public MainWindow()
         {
             InitializeComponent();
+
+            timer = new DispatcherTimer(TimeSpan.FromMilliseconds(25), DispatcherPriority.ApplicationIdle, OnTimerTick, this.Dispatcher);
+            timer.IsEnabled = false;
 
             this.frames = Cell.Create(WifLoader.Load(@"e:\temp\output\test.wif"));
             this.CurrentImageIndex = Cell.Create(0);
             this.CurrentImage = Cell.Derived(frames, CurrentImageIndex, (fs, i) => fs[i]);
             this.MaximumImageIndex = Cell.Derived(frames, fs => fs.Count - 1);
+            this.IsAnimating = Cell.Create(false);
             this.DataContext = this;
+
+            this.IsAnimating.ValueChanged += OnIsAnimatingChanged;
         }
+
+        private void OnTimerTick(object sender, EventArgs args)
+        {
+            CurrentImageIndex.Value = (CurrentImageIndex.Value + 1) % MaximumImageIndex.Value;
+        }
+
+        private void OnIsAnimatingChanged()
+        {
+            this.timer.IsEnabled = IsAnimating.Value;
+        }
+
+        public Cell<bool> IsAnimating { get; }
 
         public Cell<WriteableBitmap> CurrentImage { get; }
 
