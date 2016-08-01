@@ -1,4 +1,5 @@
 ﻿using Cells;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,10 +21,8 @@ namespace WifViewer
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : Window, IView
     {
-        private readonly Cell<List<WriteableBitmap>> frames;
-
         private readonly DispatcherTimer timer;
 
         public MainWindow()
@@ -31,40 +30,69 @@ namespace WifViewer
             InitializeComponent();
 
             timer = new DispatcherTimer(TimeSpan.FromMilliseconds(25), DispatcherPriority.ApplicationIdle, OnTimerTick, this.Dispatcher);
-            timer.IsEnabled = false;
+            timer.IsEnabled = true;
 
-            this.frames = Cell.Create(WifLoader.Load(@"e:\temp\output\test.wif"));
-            this.CurrentImageIndex = Cell.Create(0);
-            this.CurrentImage = Cell.Derived(frames, CurrentImageIndex, (fs, i) => fs[i]);
-            this.MaximumImageIndex = Cell.Derived(frames, fs => fs.Count - 1);
-            this.IsAnimating = Cell.Create(false);
-            this.DataContext = this;
+            this.DataContext = new ViewModel(this);
+            Open = new EnabledCommand(OnOpen);
 
-            this.IsAnimating.ValueChanged += OnIsAnimatingChanged;
+            //this.frames = Cell.Create(WifLoader.Load(@"e:\temp\output\test.wif"));
+            //this.CurrentImageIndex = Cell.Create(0);
+            //this.CurrentImage = Cell.Derived(frames, CurrentImageIndex, (fs, i) => fs[i]);
+            //this.FrameCount = Cell.Derived(frames, fs => fs.Count);
+            //this.MaximumImageIndex = Cell.Derived(frames, fs => fs.Count - 1);
+            //this.IsAnimating = Cell.Create(false);
+            //this.DataContext = this;
+
+            //this.IsAnimating.ValueChanged += OnIsAnimatingChanged;
         }
+
+        public ICommand Open { get; }
 
         private void OnTimerTick(object sender, EventArgs args)
         {
-            CurrentImageIndex.Value = (CurrentImageIndex.Value + 1) % MaximumImageIndex.Value;
+            // CurrentImageIndex.Value = (CurrentImageIndex.Value + 1) % FrameCount.Value;
         }
 
-        private void OnIsAnimatingChanged()
+        private void OnOpen()
         {
-            this.timer.IsEnabled = IsAnimating.Value;
+            
         }
 
-        public Cell<bool> IsAnimating { get; }
-
-        public Cell<WriteableBitmap> CurrentImage { get; }
-
-        public Cell<int> CurrentImageIndex { get; }
-
-        public Cell<int> MaximumImageIndex { get; }
-
-        private void UI_OnRefresh(object sender, RoutedEventArgs e)
+        public string AskUserForFilename()
         {
-            this.CurrentImageIndex.Value = 0;
-            this.frames.Value = WifLoader.Load(@"e:\temp\output\test.wif");
+            var dialog = new OpenFileDialog();
+            dialog.Filter = "Wif Files|*.wif";
+            dialog.CheckFileExists = true;
+
+            if (dialog.ShowDialog() == true)
+            {
+                return dialog.FileName;
+            }
+            else
+            {
+                return null;
+            }
         }
+
+        //private void OnIsAnimatingChanged()
+        //{
+        //    this.timer.IsEnabled = IsAnimating.Value;
+        //}
+
+        //public Cell<int> FrameCount { get; }
+
+        //public Cell<bool> IsAnimating { get; }
+
+        //public Cell<WriteableBitmap> CurrentImage { get; }
+
+        //public Cell<int> CurrentImageIndex { get; }
+
+        //public Cell<int> MaximumImageIndex { get; }
+
+        //private void UI_OnRefresh(object sender, RoutedEventArgs e)
+        //{
+        //    this.CurrentImageIndex.Value = 0;
+        //    this.frames.Value = WifLoader.Load(@"e:\temp\output\test.wif");
+        //}
     }
 }

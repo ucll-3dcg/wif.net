@@ -5,21 +5,32 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WifViewer"
         mc:Ignorable="d"
+        x:Name="mainWindow"
         Title="MainWindow" Height="350" Width="525">
+    <Window.InputBindings>
+        <KeyBinding Modifiers="Ctrl" Key="O" Command="{Binding Path=Open}" />
+        <KeyBinding Key="F5" Command="{Binding Path=Refresh}" />
+    </Window.InputBindings>
     <DockPanel>
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="File">
+                <MenuItem Header="Open" Command="{Binding Path=Open}" InputGestureText="Ctrl+O" />
+                <MenuItem Header="Refresh" Command="{Binding Path=Refresh}" InputGestureText="F5" />
+            </MenuItem>
+        </Menu>
         <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
-            <Slider Value="{Binding CurrentImageIndex.Value}" Minimum="0" Maximum="{Binding MaximumImageIndex.Value}" TickFrequency="1" Margin="10" Width="150" />
+            <Slider Value="{Binding CurrentFrameIndex.Value}" Minimum="0" Maximum="{Binding LastFrameIndex.Value}" TickFrequency="1" Margin="10" Width="150" />
             <TextBlock VerticalAlignment="Center">
                 <TextBlock.Text>
                     <MultiBinding StringFormat="{}Frame {0} of {1}">
-                        <Binding Path="CurrentImageIndex.Value" />
-                        <Binding Path="MaximumImageIndex.Value" />
+                        <Binding Path="CurrentFrameIndex.Value" />
+                        <Binding Path="LastFrameIndex.Value" />
                     </MultiBinding>
                 </TextBlock.Text>
             </TextBlock>
-            <CheckBox Content="Animate" IsChecked="{Binding IsAnimating.Value}" VerticalAlignment="Center" Margin="5" />
+            <!--<CheckBox Content="Animate" IsChecked="{Binding IsAnimating.Value}" VerticalAlignment="Center" Margin="5" />-->
         </StackPanel>
-        <Button DockPanel.Dock="Bottom" Content="Refresh" Click="UI_OnRefresh" Padding="10" Margin="5" />
-        <Image Source="{Binding CurrentImage.Value}" />
+        <!--<Button DockPanel.Dock="Bottom" Content="Refresh" Click="UI_OnRefresh" Padding="10" Margin="5" />-->
+        <Image Source="{Binding CurrentFrame.Value}" />
     </DockPanel>
 </Window>

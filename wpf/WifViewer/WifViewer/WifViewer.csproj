@@ -55,6 +55,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="CellCommand.cs" />
     <Compile Include="Cells\Cell.cs" />
     <Compile Include="Cells\CellExtensions.cs" />
     <Compile Include="Cells\ConcreteCell.cs" />
@@ -63,6 +64,8 @@
     <Compile Include="Cells\Util.cs" />
     <Compile Include="Cells\ValidatedCell.cs" />
     <Compile Include="Cells\Var.cs" />
+    <Compile Include="EnabledCommand.cs" />
+    <Compile Include="ViewModel.cs" />
     <Compile Include="WifLoader.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
