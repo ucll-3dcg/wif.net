@@ -26,6 +26,8 @@ namespace WifViewer
             CurrentFrame = Cell.Derived(Frames, CurrentFrameIndex, (f, i) => i < f.Count ? f[i] : null);
             LastFrameIndex = Cell.Derived(Frames, f => f.Count);
             LoadFailed = Cell.Create(false);
+
+            LoadWif(@"e:\temp\output\test.wif");
         }
 
         public ICommand Open { get; }
@@ -44,24 +46,24 @@ namespace WifViewer
 
         private void OnRefresh()
         {
-            LoadWif();
+            LoadWif(Path.Value);
         }
 
         private void OnPathChanged()
         {
             if (Path.Value != null)
             {
-                LoadWif();
+                LoadWif(Path.Value);
             }
         }
 
-        private void LoadWif()
+        private void LoadWif(string path)
         {
             CurrentFrameIndex.Value = 0;
 
             try
             {
-                Frames.Value = WifLoader.Load(Path.Value);
+                Frames.Value = WifLoader.Load(path);
                 LoadFailed.Value = false;
             }
             catch (Exception)
@@ -69,6 +71,11 @@ namespace WifViewer
                 Frames.Value = new List<WriteableBitmap>();
                 LoadFailed.Value = true;
             }
+        }
+
+        public void Tick()
+        {
+
         }
 
         public Cell<string> Path { get; }

@@ -33,29 +33,13 @@ namespace WifViewer
             timer.IsEnabled = true;
 
             this.DataContext = new ViewModel(this);
-            Open = new EnabledCommand(OnOpen);
-
-            //this.frames = Cell.Create(WifLoader.Load(@"e:\temp\output\test.wif"));
-            //this.CurrentImageIndex = Cell.Create(0);
-            //this.CurrentImage = Cell.Derived(frames, CurrentImageIndex, (fs, i) => fs[i]);
-            //this.FrameCount = Cell.Derived(frames, fs => fs.Count);
-            //this.MaximumImageIndex = Cell.Derived(frames, fs => fs.Count - 1);
-            //this.IsAnimating = Cell.Create(false);
-            //this.DataContext = this;
-
-            //this.IsAnimating.ValueChanged += OnIsAnimatingChanged;
         }
-
-        public ICommand Open { get; }
 
         private void OnTimerTick(object sender, EventArgs args)
         {
-            // CurrentImageIndex.Value = (CurrentImageIndex.Value + 1) % FrameCount.Value;
-        }
+            dynamic vm = DataContext;
 
-        private void OnOpen()
-        {
-            
+            vm.Tick();
         }
 
         public string AskUserForFilename()
@@ -73,26 +57,5 @@ namespace WifViewer
                 return null;
             }
         }
-
-        //private void OnIsAnimatingChanged()
-        //{
-        //    this.timer.IsEnabled = IsAnimating.Value;
-        //}
-
-        //public Cell<int> FrameCount { get; }
-
-        //public Cell<bool> IsAnimating { get; }
-
-        //public Cell<WriteableBitmap> CurrentImage { get; }
-
-        //public Cell<int> CurrentImageIndex { get; }
-
-        //public Cell<int> MaximumImageIndex { get; }
-
-        //private void UI_OnRefresh(object sender, RoutedEventArgs e)
-        //{
-        //    this.CurrentImageIndex.Value = 0;
-        //    this.frames.Value = WifLoader.Load(@"e:\temp\output\test.wif");
-        //}
     }
 }
