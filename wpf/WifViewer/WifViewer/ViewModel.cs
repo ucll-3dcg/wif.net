@@ -24,10 +24,10 @@ namespace WifViewer
             Frames = Cell.Create(new List<WriteableBitmap>());
             CurrentFrameIndex = Cell.Create(0);
             CurrentFrame = Cell.Derived(Frames, CurrentFrameIndex, (f, i) => i < f.Count ? f[i] : null);
-            LastFrameIndex = Cell.Derived(Frames, f => f.Count);
+            LastFrameIndex = Cell.Derived(Frames, f => f.Count - 1);
             LoadFailed = Cell.Create(false);
 
-            LoadWif(@"e:\temp\output\test.wif");
+            Path.Value = @"e:\temp\output\test.wif";
         }
 
         public ICommand Open { get; }
