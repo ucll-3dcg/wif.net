@@ -29,7 +29,7 @@
                     </MultiBinding>
                 </TextBlock.Text>
             </TextBlock>
-            <!--<CheckBox Content="Animate" IsChecked="{Binding IsAnimating.Value}" VerticalAlignment="Center" Margin="5" />-->
+            <CheckBox Content="Animate" IsChecked="{Binding IsAnimating.Value}" VerticalAlignment="Center" Margin="5" />
         </StackPanel>
         <!--<Button DockPanel.Dock="Bottom" Content="Refresh" Click="UI_OnRefresh" Padding="10" Margin="5" />-->
         <Image Source="{Binding CurrentFrame.Value}" />

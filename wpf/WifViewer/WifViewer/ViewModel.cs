@@ -28,7 +28,7 @@ namespace WifViewer
             CurrentFrame = Cell.Derived(Frames, CurrentFrameIndex, (f, i) => i < f.Count ? f[i] : null);
             LastFrameIndex = Cell.Derived(Frames, f => f.Count - 1);
             LoadFailed = Cell.Create(false);
-            IsAnimated = Cell.Create(false);
+            IsAnimating = Cell.Create(false);
 
             Path.Value = @"e:\temp\output\test.wif";
         }
@@ -93,7 +93,18 @@ namespace WifViewer
 
         public void Tick()
         {
+            if ( IsAnimating.Value )
+            {
+                OnNextFrame();
+            }
+        }
 
+        private void OnNextFrame()
+        {
+            if ( Frames.Value != null )
+            {
+                CurrentFrameIndex.Value = (CurrentFrameIndex.Value + 1) % Frames.Value.Count;
+            }
         }
 
         public Cell<string> Path { get; }
@@ -108,7 +119,7 @@ namespace WifViewer
 
         public Cell<bool> LoadFailed { get; }
 
-        public Cell<bool> IsAnimated { get; }
+        public Cell<bool> IsAnimating { get; }
     }
 
     public interface IView
