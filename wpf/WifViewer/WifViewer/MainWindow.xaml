@@ -15,6 +15,7 @@
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="File">
                 <MenuItem Header="Open" Command="{Binding Path=Open}" InputGestureText="Ctrl+O" />
+                <MenuItem Header="Export" Command="{Binding Path=Export}" />
                 <MenuItem Header="Refresh" Command="{Binding Path=Refresh}" InputGestureText="F5" />
             </MenuItem>
         </Menu>

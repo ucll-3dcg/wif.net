@@ -42,11 +42,27 @@ namespace WifViewer
             vm.Tick();
         }
 
-        public string AskUserForFilename()
+        public string GetWifPath()
         {
             var dialog = new OpenFileDialog();
             dialog.Filter = "Wif Files|*.wif";
             dialog.CheckFileExists = true;
+
+            if (dialog.ShowDialog() == true)
+            {
+                return dialog.FileName;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        public string GetExportPath()
+        {
+            var dialog = new OpenFileDialog();
+            dialog.Filter = "MP4 Files|*.mp4";
+            dialog.CheckFileExists = false;
 
             if (dialog.ShowDialog() == true)
             {

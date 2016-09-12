@@ -1,4 +1,5 @@
 ﻿using Cells;
+using Commands;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,8 +18,9 @@ namespace WifViewer
         {
             this.view = view;
 
-            Open = new EnabledCommand(OnOpen);
-            Refresh = new EnabledCommand(OnRefresh);
+            Open = EnabledCommand.FromDelegate(OnOpen);
+            Refresh = EnabledCommand.FromDelegate(OnRefresh);
+            Export = EnabledCommand.FromDelegate(OnExport);
             Path = Cell.Create<string>();
             Path.ValueChanged += OnPathChanged;
             Frames = Cell.Create(new List<WriteableBitmap>());
@@ -26,6 +28,7 @@ namespace WifViewer
             CurrentFrame = Cell.Derived(Frames, CurrentFrameIndex, (f, i) => i < f.Count ? f[i] : null);
             LastFrameIndex = Cell.Derived(Frames, f => f.Count - 1);
             LoadFailed = Cell.Create(false);
+            IsAnimated = Cell.Create(false);
 
             Path.Value = @"e:\temp\output\test.wif";
         }
@@ -34,9 +37,11 @@ namespace WifViewer
 
         public ICommand Refresh { get; }
 
+        public ICommand Export { get; }
+
         private void OnOpen()
         {
-            var filename = view.AskUserForFilename();
+            var filename = view.GetWifPath();
 
             if ( filename != null )
             {
@@ -73,6 +78,19 @@ namespace WifViewer
             }
         }
 
+        private void OnExport()
+        {
+            if ( Frames.Value != null )
+            {
+                var path = view.GetExportPath();
+
+                if (path != null)
+                {
+                    MovieExporter.Export(Frames.Value, path);
+                }
+            }            
+        }
+
         public void Tick()
         {
 
@@ -89,10 +107,14 @@ namespace WifViewer
         public Cell<int> LastFrameIndex { get; }
 
         public Cell<bool> LoadFailed { get; }
+
+        public Cell<bool> IsAnimated { get; }
     }
 
     public interface IView
     {
-        string AskUserForFilename();
+        string GetWifPath();
+
+        string GetExportPath();
     }
 }
