@@ -27,6 +27,9 @@ namespace WifViewer
 
         public MainWindow()
         {
+            this.AnimationSpeed = Cell.Create(30);
+            this.AnimationSpeed.ValueChanged += OnAnimationSpeedChanged;
+
             InitializeComponent();
 
             timer = new DispatcherTimer(TimeSpan.FromMilliseconds(25), DispatcherPriority.ApplicationIdle, OnTimerTick, this.Dispatcher);
@@ -72,6 +75,13 @@ namespace WifViewer
             {
                 return null;
             }
+        }
+
+        public Cell<int> AnimationSpeed { get; }
+
+        private void OnAnimationSpeedChanged()
+        {
+            this.timer.Interval = TimeSpan.FromMilliseconds(AnimationSpeed.Value);
         }
     }
 }

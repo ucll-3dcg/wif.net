@@ -65,6 +65,7 @@ namespace WifViewer
         private void LoadWif(string path)
         {
             CurrentFrameIndex.Value = 0;
+            IsAnimating.Value = false;
 
             try
             {
