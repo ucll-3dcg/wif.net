@@ -30,6 +30,7 @@ namespace WifViewer
             LoadFailed = Cell.Create(false);
             IsAnimating = Cell.Create(false);
 
+            // Opened at startup
             Path.Value = @"e:\temp\output\test.wif";
         }
 

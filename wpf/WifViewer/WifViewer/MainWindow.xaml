@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:WifViewer"
         mc:Ignorable="d"
         x:Name="mainWindow"
-        Title="MainWindow" Height="350" Width="525">
+        Title="WIF Viewer" Height="350" Width="525" Background="Black">
     <Window.InputBindings>
         <KeyBinding Modifiers="Ctrl" Key="O" Command="{Binding Path=Open}" />
         <KeyBinding Key="F5" Command="{Binding Path=Refresh}" />
@@ -19,60 +19,68 @@
                 <MenuItem Header="Refresh" Command="{Binding Path=Refresh}" InputGestureText="F5" />
             </MenuItem>
         </Menu>
-        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
-            <Slider Value="{Binding CurrentFrameIndex.Value}" Minimum="0" Maximum="{Binding LastFrameIndex.Value}" TickFrequency="1" Margin="10" Width="150">
-                <Slider.ToolTip>
-                    <TextBlock Text="Frame" />
-                </Slider.ToolTip>
-            </Slider>
-            <CheckBox Content="Animate" IsChecked="{Binding IsAnimating.Value}" VerticalAlignment="Center" Margin="5" >
-                <CheckBox.Template>
-                    <ControlTemplate TargetType="{x:Type CheckBox}">
-                        <Border x:Name="border" Padding="5" BorderThickness="1" BorderBrush="#BBB" CornerRadius="4" Width="32" Height="32" Background="Transparent">
-                            <Border.ToolTip>
-                                <TextBlock Text="Start/stop animation" />
-                            </Border.ToolTip>
-                            <ContentControl x:Name="content" HorizontalAlignment="Center" VerticalAlignment="Center" />
-                        </Border>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsChecked" Value="False">
-                                <Setter TargetName="content" Property="Content">
-                                    <Setter.Value>
-                                        <Canvas Width="10" Height="20">
-                                            <Polygon Fill="Black">
-                                                <Polygon.Points>
-                                                    <Point X="0" Y="0" />
-                                                    <Point X="10" Y="10" />
-                                                    <Point X="0" Y="20" />
-                                                </Polygon.Points>
-                                            </Polygon>
-                                        </Canvas>
-                                    </Setter.Value>
-                                </Setter>
-                            </Trigger>
-                            <Trigger Property="IsChecked" Value="True">
-                                <Setter TargetName="content" Property="Content">
-                                    <Setter.Value>
-                                        <Canvas Width="15" Height="20">
-                                            <Rectangle Width="5" Height="20" Canvas.Left="0" Canvas.Top="0" Fill="Black" />
-                                            <Rectangle Width="5" Height="20" Canvas.Left="10" Canvas.Top="0" Fill="Black" />
-                                        </Canvas>
-                                    </Setter.Value>
-                                </Setter>
-                            </Trigger>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="border" Property="Background" Value="#CCC" />
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </CheckBox.Template>
-            </CheckBox>
-            <Slider Value="{Binding AnimationSpeed.Value, ElementName=mainWindow}" Minimum="10" Maximum="100" TickFrequency="10" Margin="10" Width="150">
-                <Slider.ToolTip>
-                    <TextBlock Text="Animation speed" />
-                </Slider.ToolTip>
-            </Slider>
-        </StackPanel>
+        <ToolBarTray DockPanel.Dock="Top">
+            <ToolBar>
+                <Border>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="Frame" VerticalAlignment="Center" Margin="5" />
+                        <Slider Value="{Binding CurrentFrameIndex.Value}" Minimum="0" Maximum="{Binding LastFrameIndex.Value}" TickFrequency="1" Margin="10" Width="150">
+                            <Slider.ToolTip>
+                                <TextBlock Text="Frame" />
+                            </Slider.ToolTip>
+                        </Slider>
+                    </StackPanel>
+                </Border>
+                <CheckBox Content="Animate" IsChecked="{Binding IsAnimating.Value}" VerticalAlignment="Center" Margin="5" >
+                    <CheckBox.Template>
+                        <ControlTemplate TargetType="{x:Type CheckBox}">
+                            <Border x:Name="border" Padding="5" BorderThickness="1" BorderBrush="#BBB" CornerRadius="4" Width="32" Height="32" Background="Transparent">
+                                <Border.ToolTip>
+                                    <TextBlock Text="Start/stop animation" />
+                                </Border.ToolTip>
+                                <ContentControl x:Name="content" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsChecked" Value="False">
+                                    <Setter TargetName="content" Property="Content">
+                                        <Setter.Value>
+                                            <Canvas Width="10" Height="20">
+                                                <Polygon Fill="Black">
+                                                    <Polygon.Points>
+                                                        <Point X="0" Y="0" />
+                                                        <Point X="10" Y="10" />
+                                                        <Point X="0" Y="20" />
+                                                    </Polygon.Points>
+                                                </Polygon>
+                                            </Canvas>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Trigger>
+                                <Trigger Property="IsChecked" Value="True">
+                                    <Setter TargetName="content" Property="Content">
+                                        <Setter.Value>
+                                            <Canvas Width="15" Height="20">
+                                                <Rectangle Width="5" Height="20" Canvas.Left="0" Canvas.Top="0" Fill="Black" />
+                                                <Rectangle Width="5" Height="20" Canvas.Left="10" Canvas.Top="0" Fill="Black" />
+                                            </Canvas>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Trigger>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="border" Property="Background" Value="#CCC" />
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </CheckBox.Template>
+                </CheckBox>
+                <TextBlock Text="Animation Speed" VerticalAlignment="Center" Margin="5" />
+                <Slider Value="{Binding AnimationSpeed.Value, ElementName=mainWindow}" Minimum="10" Maximum="100" TickFrequency="10" Margin="10" Width="150">
+                    <Slider.ToolTip>
+                        <TextBlock Text="Animation speed" />
+                    </Slider.ToolTip>
+                </Slider>
+            </ToolBar>
+        </ToolBarTray>
         <StatusBar DockPanel.Dock="Bottom">
             <TextBlock VerticalAlignment="Center">
                 <TextBlock.Text>

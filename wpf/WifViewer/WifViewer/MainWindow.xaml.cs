@@ -34,15 +34,16 @@ namespace WifViewer
 
             timer = new DispatcherTimer(TimeSpan.FromMilliseconds(25), DispatcherPriority.ApplicationIdle, OnTimerTick, this.Dispatcher);
             timer.IsEnabled = true;
-
-            this.DataContext = new ViewModel(this);
         }
 
         private void OnTimerTick(object sender, EventArgs args)
         {
             dynamic vm = DataContext;
 
-            vm.Tick();
+            if (vm != null)
+            {
+                vm.Tick();
+            }
         }
 
         public string GetWifPath()
