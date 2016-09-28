@@ -10,6 +10,7 @@
     <Window.InputBindings>
         <KeyBinding Modifiers="Ctrl" Key="O" Command="{Binding Path=Open}" />
         <KeyBinding Key="F5" Command="{Binding Path=Refresh}" />
+        <KeyBinding Key="Space" Command="{Binding Path=ToggleAnimation}" />
     </Window.InputBindings>
     <DockPanel>
         <Menu DockPanel.Dock="Top">

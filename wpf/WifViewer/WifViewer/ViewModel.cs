@@ -21,6 +21,7 @@ namespace WifViewer
             Open = EnabledCommand.FromDelegate(OnOpen);
             Refresh = EnabledCommand.FromDelegate(OnRefresh);
             Export = EnabledCommand.FromDelegate(OnExport);
+            ToggleAnimation = EnabledCommand.FromDelegate(OnToggleAnimation);
             Path = Cell.Create<string>();
             Path.ValueChanged += OnPathChanged;
             Frames = Cell.Create(new List<WriteableBitmap>());
@@ -28,7 +29,7 @@ namespace WifViewer
             CurrentFrame = Cell.Derived(Frames, CurrentFrameIndex, (f, i) => i < f.Count ? f[i] : null);
             LastFrameIndex = Cell.Derived(Frames, f => f.Count - 1);
             LoadFailed = Cell.Create(false);
-            IsAnimating = Cell.Create(false);
+            IsAnimating = Cell.Create(false);            
 
             // Opened at startup
             Path.Value = @"e:\temp\output\test.wif";
@@ -39,6 +40,13 @@ namespace WifViewer
         public ICommand Refresh { get; }
 
         public ICommand Export { get; }
+
+        public ICommand ToggleAnimation { get; }
+
+        private void OnToggleAnimation()
+        {
+            IsAnimating.Value = !IsAnimating.Value;
+        }
 
         private void OnOpen()
         {
@@ -103,7 +111,7 @@ namespace WifViewer
 
         private void OnNextFrame()
         {
-            if ( Frames.Value != null )
+            if ( Frames.Value != null && Frames.Value.Count != 0 )
             {
                 CurrentFrameIndex.Value = (CurrentFrameIndex.Value + 1) % Frames.Value.Count;
             }
