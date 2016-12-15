@@ -41,7 +41,7 @@ namespace Cells
 
         public override void Refresh()
         {
-            // NOP
+            NotifyObservers();
         }
     }
 }

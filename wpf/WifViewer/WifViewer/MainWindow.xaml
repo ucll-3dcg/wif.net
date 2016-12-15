@@ -3,25 +3,63 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+	xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit"
         xmlns:local="clr-namespace:WifViewer"
         mc:Ignorable="d"
-        x:Name="mainWindow"
-        Title="WIF Viewer" Height="350" Width="525" Background="Black">
+        x:Name="mainWindow" Height="700" Width="1000">
+
+
+    <Window.Title>
+        <Binding Path="ChaiPath.Value">
+            <!--<Binding.Converter>
+                <StaticResource ResourceKey="windowTitleConverter" />
+            </Binding.Converter>-->
+        </Binding>
+    </Window.Title>
     <Window.InputBindings>
-        <KeyBinding Modifiers="Ctrl" Key="O" Command="{Binding Path=Open}" />
-        <KeyBinding Key="F5" Command="{Binding Path=Refresh}" />
-        <KeyBinding Key="Space" Command="{Binding Path=ToggleAnimation}" />
+        <KeyBinding Modifiers="Ctrl" Key="N" Command="{Binding Path=NewChai}" />
+        <KeyBinding Modifiers="Ctrl" Key="S" Command="{Binding Path=SaveChai}" />
+        <KeyBinding Modifiers="Ctrl+Shift" Key="S" Command="{Binding Path=SaveAsChai}" />
+        <KeyBinding Modifiers="Ctrl" Key="O" Command="{Binding Path=OpenChai}" />
+        <KeyBinding Modifiers="Ctrl" Key="P" Command="{Binding Path=ToggleAnimation}" />
+        <KeyBinding Modifiers="Ctrl" Key="R" Command="{Binding Path=SetRaytracer}" />
+        <KeyBinding Modifiers="Ctrl" Key="C" Command="{Binding Path=ClearConsole}" />
+        <KeyBinding Key="F5" Command="{Binding Path=Build}" />
     </Window.InputBindings>
     <DockPanel>
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="File">
-                <MenuItem Header="Open" Command="{Binding Path=Open}" InputGestureText="Ctrl+O" />
-                <MenuItem Header="Export" Command="{Binding Path=Export}" />
+                <MenuItem Header="New Script" Command="{Binding Path=NewChai}" InputGestureText="Ctrl+N" />
+                <Separator/>
+                <MenuItem Header="Save..." Command="{Binding Path=SaveChai}" InputGestureText="Ctrl+S" />
+                <MenuItem Header="Save As..." Command="{Binding Path=SaveAsChai}" InputGestureText="Ctrl+Shift+S" />
+                <MenuItem Header="Open..." Command="{Binding Path=OpenChai}" InputGestureText="Ctrl+O" />
+                <Separator/>
+                <MenuItem Header="Export..." Command="{Binding Path=Export}" />
                 <MenuItem Header="Refresh" Command="{Binding Path=Refresh}" InputGestureText="F5" />
+                <Separator/>
+
+                <MenuItem Header="Exit" Command="{Binding Path=Exit}"  InputGestureText="Alt+F4"/>
+            </MenuItem>
+            <MenuItem Header="Run">
+                <MenuItem Header="Build WIF" Command="{Binding Path=Build}" InputGestureText="F5" />
+                <MenuItem Header="Set raytracer.exe..." Command="{Binding Path=SetRaytracer}" InputGestureText="Ctrl+R" />
+                <Separator/>
+                <MenuItem Header="Clear console" Command="{Binding Path=ClearConsole}"  InputGestureText="Ctrl+C"  />
             </MenuItem>
         </Menu>
         <ToolBarTray DockPanel.Dock="Top">
             <ToolBar>
+                <Button FontSize="22px" FontFamily="Segoe MDL2 Assets" Command="{Binding Path=NewChai}" Content="&#xE8F4;" Padding="5px" ToolTip="New [Ctrl+N]" />
+                <Button FontSize="22px" FontFamily="Segoe MDL2 Assets" Command="{Binding Path=SaveChai}" Content="&#xE74E;" Padding="5px" ToolTip="Save [Ctrl+S]" />
+                <Button FontSize="22px" FontFamily="Segoe MDL2 Assets" Command="{Binding Path=SaveAsChai}" Content="&#xE792;" Padding="5px" ToolTip="Save As [Ctrl+Shift+S]" />
+                <Button FontSize="22px" FontFamily="Segoe MDL2 Assets" Command="{Binding Path=OpenChai}" Content="&#xE8E5;" Padding="5px" ToolTip="Open [Ctrl+O]" />
+                <Separator/>
+
+                <Button FontSize="22px" FontFamily="Segoe MDL2 Assets" Command="{Binding Path=Build}" Content="&#xE2AC;" Padding="5px" ToolTip="Build Now [F5]" />
+                <Separator/>
+                <Separator/>
                 <Border>
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="Frame" VerticalAlignment="Center" Margin="5" />
@@ -82,16 +120,107 @@
                 </Slider>
             </ToolBar>
         </ToolBarTray>
+
+
+       
+
         <StatusBar DockPanel.Dock="Bottom">
             <TextBlock VerticalAlignment="Center">
                 <TextBlock.Text>
-                    <MultiBinding StringFormat="{}Frame {0} of {1}">
+                    <MultiBinding StringFormat="{}Frame {0} of {1} - Document untouched {2}">
                         <Binding Path="CurrentFrameIndex.Value" />
                         <Binding Path="LastFrameIndex.Value" />
+                        <Binding Path="IsEditorPrestine.Value" />
                     </MultiBinding>
                 </TextBlock.Text>
             </TextBlock>
         </StatusBar>
-        <Image Source="{Binding CurrentFrame.Value}" />
-    </DockPanel>
+
+
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="4"/>
+                <ColumnDefinition Width="1*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="4*"/>
+                <RowDefinition Height="4"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="20"/>
+            </Grid.RowDefinitions>
+            <avalonEdit:TextEditor  Grid.Row="0" Grid.RowSpan="4"
+				Name="textEditor"
+                    
+        LineNumbersForeground="Magenta"
+				FontFamily="Consolas"
+				FontSize="10pt"
+                    Document="{Binding ChaiScript.Value}"
+				SyntaxHighlighting="JavaScript"
+                    ShowLineNumbers="True">
+                    
+            </avalonEdit:TextEditor>
+            <GridSplitter Grid.Column="1"  Grid.RowSpan="4" Width="4" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+            <Grid Background="Black" Grid.Row="0" Grid.Column="2">
+            <Image  Source="{Binding CurrentFrame.Value}" />
+            </Grid>
+            <GridSplitter 
+            ResizeDirection="Rows" 
+            Grid.Column="2" 
+            Grid.Row="1" 
+            Width="Auto" 
+            Height="4" 
+            HorizontalAlignment="Stretch" 
+            VerticalAlignment="Stretch" 
+            Margin="0"/>
+
+            <avalonEdit:TextEditor        Grid.Column="2"   Grid.Row="2" 
+				Name="textEditor0"
+                    
+        LineNumbersForeground="Magenta"
+				FontFamily="Consolas"
+				FontSize="10pt"
+                    Document="{Binding ConsoleText.Value}"
+                                         IsReadOnly="True"
+				>
+
+            </avalonEdit:TextEditor>
+            <ProgressBar
+                Name="pbStatus" Grid.Row="3" Grid.Column="2"  Maximum="{Binding Path=FramesToBuild.Value}" Value="{Binding Path=BuiltFrames.Value}" >
+
+                <ProgressBar.Style>
+                    <Style TargetType="{x:Type ProgressBar}">
+                        <Setter Property="Visibility" Value="Visible"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding FramesToBuild.Value}" Value="0">
+                                <Setter Property="Visibility" Value="Hidden"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </ProgressBar.Style>
+
+            </ProgressBar>
+            <TextBlock Grid.Row="3" Grid.Column="2" 
+           HorizontalAlignment="Center" 
+           VerticalAlignment="Center" >
+                <Run Text="{Binding ElementName=pbStatus, Path=Value, StringFormat={}{0:0} frames}"></Run>
+                <Run> out of </Run>
+                <Run Text="{Binding ElementName=pbStatus, Path=Maximum, StringFormat={}{0:0} done.}"></Run>
+
+                <TextBlock.Style>
+                    <Style TargetType="{x:Type TextBlock}">
+                        <Setter Property="Visibility" Value="Visible"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding FramesToBuild.Value}" Value="0">
+                                <Setter Property="Visibility" Value="Hidden"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBlock.Style>
+            
+            
+            </TextBlock>
+
+        </Grid>
+        </DockPanel>
 </Window>

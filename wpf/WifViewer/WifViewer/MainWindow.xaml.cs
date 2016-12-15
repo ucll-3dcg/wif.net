@@ -2,6 +2,7 @@
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -25,6 +26,9 @@ namespace WifViewer
     {
         private readonly DispatcherTimer timer;
 
+
+      
+
         public MainWindow()
         {
             this.AnimationSpeed = Cell.Create(30);
@@ -34,6 +38,10 @@ namespace WifViewer
 
             timer = new DispatcherTimer(TimeSpan.FromMilliseconds(25), DispatcherPriority.ApplicationIdle, OnTimerTick, this.Dispatcher);
             timer.IsEnabled = true;
+
+
+            
+
         }
 
         private void OnTimerTick(object sender, EventArgs args)
@@ -43,6 +51,53 @@ namespace WifViewer
             if (vm != null)
             {
                 vm.Tick();
+            }
+        }
+
+        public string GetChaiPath()
+        {
+            var dialog = new OpenFileDialog();
+            dialog.Filter = "Wif Files|*.chai";
+            dialog.CheckFileExists = true;
+
+            if (dialog.ShowDialog() == true)
+            {
+                return dialog.FileName;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        public string GetRaytracerPath()
+        {
+            var dialog = new OpenFileDialog();
+            dialog.Filter = "Raytracer|raytracer.exe";
+            dialog.CheckFileExists = true;
+
+            if (dialog.ShowDialog() == true)
+            {
+                return dialog.FileName;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        public string GetChaiSavePath()
+        {
+            var dialog = new SaveFileDialog();
+            dialog.Filter = "Wif Files|*.chai";
+
+            if (dialog.ShowDialog() == true)
+            {
+                return dialog.FileName;
+            }
+            else
+            {
+                return null;
             }
         }
 
@@ -84,5 +139,28 @@ namespace WifViewer
         {
             this.timer.Interval = TimeSpan.FromMilliseconds(AnimationSpeed.Value);
         }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        public void NoWifTagFound()
+        {
+            MessageBox.Show("You need to provide a {{wif}} tag were you would put the wif filename. eg.:Pipeline.wif(\"{{wif}}\")", "No WIF-tag found. Build Failed.", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+
+        public void NoRaytracerFound()
+        {
+            MessageBox.Show("raytracer.exe could not be found", "raytracer.exe was not found. Build Failed.", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+
+        public MessageBoxResult SaveChanges()
+        {
+            return MessageBox.Show("The active script has been changed. Do you want to save it?", "Changes have been made.", MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
+        }
     }
+
+    
+
 }
