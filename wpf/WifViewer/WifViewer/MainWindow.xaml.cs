@@ -3,6 +3,7 @@ using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.Design;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,6 +17,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
+using WifViewer.AvalonEditExtra;
 
 namespace WifViewer
 {
@@ -27,7 +29,9 @@ namespace WifViewer
         private readonly DispatcherTimer timer;
 
 
-      
+        ITextMarkerService textMarkerService;
+
+
 
         public MainWindow()
         {
@@ -40,8 +44,27 @@ namespace WifViewer
             timer.IsEnabled = true;
 
 
-            
 
+            textEditor.DocumentChanged += TextEditor_DocumentChanged;
+
+        }
+
+        private void TextEditor_DocumentChanged(object sender, EventArgs e)
+        {
+            Console.WriteLine("A new document was set...");
+            var textMarkerService = new TextMarkerService(textEditor.Document);
+            textEditor.TextArea.TextView.BackgroundRenderers.Add(textMarkerService);
+            textEditor.TextArea.TextView.LineTransformers.Add(textMarkerService);
+            IServiceContainer services = (IServiceContainer)textEditor.Document.ServiceProvider.GetService(typeof(IServiceContainer));
+            if (services != null)
+                services.AddService(typeof(ITextMarkerService), textMarkerService);
+            this.textMarkerService = textMarkerService;
+            textEditor.Document.TextChanged += Document_TextChanged; ;
+        }
+
+        private void Document_TextChanged(object sender, EventArgs e)
+        {
+            clearAllMarkers();
         }
 
         private void OnTimerTick(object sender, EventArgs args)
@@ -143,6 +166,39 @@ namespace WifViewer
         private void Button_Click(object sender, RoutedEventArgs e)
         {
 
+        }
+
+        public void setErrorInEditor(int line, int column)
+        {
+
+            setErrorInEditor(line, column, 1);
+        }
+
+
+        public void setErrorInEditor(int line,int column,int length)
+        {
+
+            int offset = textEditor.Document.GetOffset(line, column);
+            ITextMarker marker = textMarkerService.Create(offset, length);
+            
+
+            marker.MarkerTypes = TextMarkerTypes.SquigglyUnderline;
+            marker.MarkerColor = Colors.Red;
+        }
+
+
+
+
+        public void clearAllMarkers()
+        {
+            textMarkerService.RemoveAll(IsCodeCoverageTextMarker);
+
+        }
+        bool IsCodeCoverageTextMarker(ITextMarker marker)
+        {
+            Console.WriteLine("-----------");
+            Type type = marker.GetType();
+            return type == typeof(TextMarker);
         }
 
         public void NoWifTagFound()

@@ -157,6 +157,7 @@
 				FontSize="10pt"
                     Document="{Binding ChaiScript.Value}"
 				SyntaxHighlighting="JavaScript"
+                                  
                     ShowLineNumbers="True">
                     
             </avalonEdit:TextEditor>

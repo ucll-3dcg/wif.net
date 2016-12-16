@@ -60,6 +60,7 @@ namespace WifViewer
             // Opened at startup
             Path.Value = @"e:\temp\output\test.wif";
             ChaiPath.Value = null;
+            
 
         }
 
@@ -96,7 +97,6 @@ namespace WifViewer
 
         private void OnNewChai()
         {
-
             if (CanClearCurrentWork())
             {
 
@@ -156,6 +156,7 @@ namespace WifViewer
 
         private void OnSaveChai()
         {
+            Console.WriteLine("calling view function");
             SaveActiveChai(false);
         }
 
@@ -177,6 +178,7 @@ namespace WifViewer
             if (ChaiScript.Value.Text.Contains("{{wif}}") && System.IO.File.Exists(RaytracerPath.Value))
 
             {
+                view.clearAllMarkers();
 
                 System.IO.File.WriteAllText("chai.tmp", ChaiScript.Value.Text.Replace("{{wif}}", "wif.tmp"));
                 IsRaytracing.Value = true;
@@ -337,8 +339,52 @@ namespace WifViewer
                 if (s0.Success)
                 {
 
-                    BuiltFrames.Value = Int32.Parse(r0.Match(e.Data).Result("${frames}"))+1;
+                    BuiltFrames.Value = Int32.Parse(r0.Match(e.Data).Result("${frames}")) + 1;
                 }
+                // Basic error tagging
+                Regex r_err = new Regex(@"^Error:.*at\s\((chai\.tmp\s)?(?<row>\d+),\s(?<col>\d+)\)",
+                          RegexOptions.None, TimeSpan.FromMilliseconds(150));
+                var s_err = r_err.Match(e.Data);
+                if (s_err.Success)
+                {
+                    int col = Int32.Parse(r_err.Match(e.Data).Result("${col}"));
+                    int row = Int32.Parse(r_err.Match(e.Data).Result("${row}"));
+                    view.setErrorInEditor(row, col);
+                }
+
+                /*
+                 from chai.tmp (18, 18) '(Mat - erials.uniform("ambient"Colors.red(), "diffuse"Colors.black(), "reflectivity"0.5))'
+ 
+                 */
+
+
+                // Advanced error tagging
+                Regex r_err0 = new Regex(@"^\s\schai.tmp\s\((?<row>\d+),\s(?<col>\d+)\)\s\'(?<text>.*)\'",
+                          RegexOptions.None, TimeSpan.FromMilliseconds(150));
+                var s_err0 = r_err0.Match(e.Data);
+                if (s_err0.Success)
+                {
+                    int col = Int32.Parse(r_err0.Match(e.Data).Result("${col}"));
+                    int row = Int32.Parse(r_err0.Match(e.Data).Result("${row}"));
+                    int length = r_err0.Match(e.Data).Result("${text}").Length;
+                    
+                    view.setErrorInEditor(row, col, length);
+                }
+
+
+                // Advanced error tagging
+                Regex r_err1 = new Regex(@"^\s\sfrom\schai.tmp\s\((?<row>\d+),\s(?<col>\d+)\)\s\'\((?<text>.*)\)\'",
+                          RegexOptions.None, TimeSpan.FromMilliseconds(150));
+                var s_err1 = r_err1.Match(e.Data);
+                if (s_err1.Success)
+                {
+                    int col = Int32.Parse(r_err1.Match(e.Data).Result("${col}"));
+                    int row = Int32.Parse(r_err1.Match(e.Data).Result("${row}"));
+                    int length = r_err1.Match(e.Data).Result("${text}").Length;
+                    length = length > 5 ? 5 : length;
+                    view.setErrorInEditor(row, col,length);
+                }
+
 
                 ConsoleText.Value.Insert(0, e.Data + Environment.NewLine);
                 ConsoleText.Refresh();
@@ -363,6 +409,7 @@ namespace WifViewer
                 try
                 {
                     System.IO.File.WriteAllText(filename, ChaiScript.Value.Text);
+                    Value_TextUnChanged();
                     return true;
                 }
                 catch (Exception)
@@ -385,6 +432,7 @@ namespace WifViewer
                         System.IO.File.WriteAllText(filename, ChaiScript.Value.Text);
                         ChaiPath.Value = filename;
                         LoadChaiFailed.Value = false;
+                        Value_TextUnChanged();
                         return true;
                     }
                     catch (Exception)
@@ -445,7 +493,19 @@ namespace WifViewer
         private void Value_TextChanged(object sender, EventArgs e)
         {
 
+            Value_TextChanged();
+        }
+
+        private void Value_TextChanged()
+        {
+
             IsEditorPrestine.Value = false;
+        }
+
+        private void Value_TextUnChanged()
+        {
+
+            IsEditorPrestine.Value = true;
         }
 
         private void OnExport()
@@ -522,6 +582,12 @@ namespace WifViewer
 
         void NoWifTagFound();
 
+        void setErrorInEditor(int line, int column);
+
+
+        void setErrorInEditor(int line, int column,int length);
+
+        void clearAllMarkers();
         void NoRaytracerFound();
         MessageBoxResult SaveChanges();
     }

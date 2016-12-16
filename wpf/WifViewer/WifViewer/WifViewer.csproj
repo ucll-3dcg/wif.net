@@ -59,6 +59,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="AvalonEditExtra\ITextMarker.cs" />
+    <Compile Include="AvalonEditExtra\TextMarkerService.cs" />
     <Compile Include="Cells\Cell.cs" />
     <Compile Include="Cells\CellExtensions.cs" />
     <Compile Include="Cells\ConcreteCell.cs" />
@@ -69,7 +71,6 @@
     <Compile Include="Cells\Var.cs" />
     <Compile Include="Commands\CellCommand.cs" />
     <Compile Include="Commands\EnabledCommand.cs" />
-    <Compile Include="ListBoxExtenders.cs" />
     <Compile Include="MovieExporter.cs" />
     <Compile Include="ViewModel.cs" />
     <Compile Include="WifLoader.cs" />
