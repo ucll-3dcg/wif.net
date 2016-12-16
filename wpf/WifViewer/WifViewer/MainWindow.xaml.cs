@@ -1,9 +1,12 @@
 ﻿using Cells;
+using ICSharpCode.AvalonEdit.Highlighting;
+using ICSharpCode.AvalonEdit.Highlighting.Xshd;
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.Design;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,6 +20,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
+using System.Xml;
 using WifViewer.AvalonEditExtra;
 
 namespace WifViewer
@@ -60,6 +64,17 @@ namespace WifViewer
                 services.AddService(typeof(ITextMarkerService), textMarkerService);
             this.textMarkerService = textMarkerService;
             textEditor.Document.TextChanged += Document_TextChanged; ;
+
+
+            using (Stream s = new FileStream(@"ActionScript.xshd",
+            FileMode.Open, FileAccess.Read))
+            {
+                using (XmlTextReader reader = new XmlTextReader(s))
+                {
+                    textEditor.SyntaxHighlighting = HighlightingLoader.Load(reader, HighlightingManager.Instance);
+                }
+            }
+
         }
 
         private void Document_TextChanged(object sender, EventArgs e)

@@ -101,6 +101,8 @@ namespace WifViewer
             {
 
                 ChaiPath.Value = null;
+                view.
+            clearAllMarkers();
                 ChaiScript.Value = new TextDocument();
 
                 IsEditorPrestine.Value = true;
@@ -477,6 +479,7 @@ namespace WifViewer
             try
             {
 
+                view.clearAllMarkers();
                 ChaiScript.Value = new TextDocument(System.IO.File.ReadAllText(path));
                 IsEditorPrestine.Value = true;
                 ChaiScript.Value.TextChanged += Value_TextChanged;
