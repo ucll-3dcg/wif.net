@@ -1,0 +1,55 @@
+﻿<Window x:Class="WifViewer.EditorWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WifViewer"
+        xmlns:avalon="http://icsharpcode.net/sharpdevelop/avalonedit"
+        mc:Ignorable="d"
+        
+        Title="{Binding Path.Value, StringFormat=3D Studio [{0}]}">
+    <Window.InputBindings>
+        <KeyBinding Modifiers="Ctrl" Key="N" Command="{Binding NewScript}" />
+        <KeyBinding Modifiers="Ctrl" Key="O" Command="{Binding OpenScript}" />
+        <KeyBinding Modifiers="Ctrl" Key="S" Command="{Binding SaveScript}" />
+        <KeyBinding Key="F5" Command="{Binding RenderScript}" />
+    </Window.InputBindings>
+    <DockPanel>
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="_Script">
+                <MenuItem Header="_New" InputGestureText="Ctrl+N" Command="{Binding NewScript}" />
+                <MenuItem Header="_Open" InputGestureText="Ctrl+O" Command="{Binding LoadScript}" />
+                <MenuItem Header="_Save" InputGestureText="Ctrl+S" Command="{Binding SaveScript}" />
+                <Separator />
+                <MenuItem Header="E_xit" InputGestureText="Alt+F4" />
+            </MenuItem>
+            <MenuItem Header="_Animation">
+                <MenuItem Header="_Open" InputGestureText="Ctrl+W" Command="{Binding LoadWif}" />
+            </MenuItem>
+        </Menu>
+        <ToolBar DockPanel.Dock="Top">
+            <Button FontSize="22px" FontFamily="Segoe MDL2 Assets" Content="&#xE8F4;" Padding="5px" ToolTip="New" Command="{Binding NewScript}" />
+            <Button FontSize="22px" FontFamily="Segoe MDL2 Assets" Content="&#xE8E5;" Padding="5px" ToolTip="Open" Command="{Binding LoadScript}" />
+            <Button FontSize="22px" FontFamily="Segoe MDL2 Assets" Content="&#xE74E;" Padding="5px" ToolTip="Save" Command="{Binding SaveScript}" />
+            <Button FontSize="22px" FontFamily="Segoe MDL2 Assets" Content="&#xE2AC;" Padding="5px" ToolTip="Render" Command="{Binding RenderScript}" />
+        </ToolBar>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition Height="auto" />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+
+            <avalon:TextEditor
+                    Grid.Row="0"
+                    LineNumbersForeground="Magenta"
+				    FontFamily="Consolas"
+				    FontSize="10pt"
+				    SyntaxHighlighting="JavaScript"
+                    ShowLineNumbers="True"
+                    Document="{Binding Source}" />
+
+            <GridSplitter Grid.Row="1" Height="5" HorizontalAlignment="Stretch" />
+        </Grid>
+    </DockPanel>
+</Window>
