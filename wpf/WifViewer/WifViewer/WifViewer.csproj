@@ -76,7 +76,7 @@
     <Compile Include="DocumentViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="MovieExporter.cs" />
-    <Compile Include="Renderer.cs" />
+    <Compile Include="Rendering\Renderer.cs" />
     <Compile Include="AnimationWindow.xaml.cs">
       <DependentUpon>AnimationWindow.xaml</DependentUpon>
     </Compile>

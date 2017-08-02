@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 
-namespace WifViewer
+namespace WifViewer.Rendering
 {
     public interface IRenderReceiver
     {

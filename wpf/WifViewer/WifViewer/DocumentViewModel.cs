@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using WifViewer.Rendering;
 using WifViewer.ViewModels;
 
 namespace WifViewer
