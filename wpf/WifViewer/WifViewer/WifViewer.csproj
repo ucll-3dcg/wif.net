@@ -59,6 +59,12 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Rendering\Base64Decoder.cs" />
+    <Compile Include="Rendering\BitmapDecoder.cs" />
+    <Compile Include="Rendering\BlockDecoder.cs" />
+    <Compile Include="Rendering\ExternalProcess.cs" />
+    <Compile Include="Rendering\IConsumer.cs" />
+    <Compile Include="Rendering\IRenderReceiver.cs" />
     <Compile Include="ViewModels\AnimationViewModel.cs" />
     <Compile Include="AvalonEditExtra\ITextMarker.cs" />
     <Compile Include="AvalonEditExtra\TextMarkerService.cs" />
