@@ -33,7 +33,15 @@
     </Window.WindowState>
     <DockPanel>
         <StatusBar DockPanel.Dock="Bottom">
-            <TextBlock Text="{Binding Status.Value}" />
+            <TextBlock>
+                <TextBlock.Text>
+                    <Binding Path="IsDoneRendering.Value">
+                        <Binding.Converter>
+                            <converters:BoolConverter True="Finished!" False="Rendering..." />
+                        </Binding.Converter>
+                    </Binding>
+                </TextBlock.Text>
+            </TextBlock>
         </StatusBar>
 
         <TabControl x:Name="tabControl" SelectedIndex="1">
@@ -47,6 +55,7 @@
                         <TextBlock Text="{Binding MaximumFrameIndex.Value}" Width="20" Margin="5" TextAlignment="Center" />
                         <Slider Minimum="0" Maximum="{Binding MaximumFrameIndex.Value}" Value="{Binding CurrentFrameIndex.Value}" Width="100" Margin="5" />
                         <CheckBox Style="{StaticResource toolbarIcon}" IsChecked="{Binding Timer.IsEnabled}" Content="{Binding Timer.IsEnabled, Converter={StaticResource toggleAnimatingConverter}}" FontFamily="Segoe MDL2 Assets" ToolTip="Toggle Animation [Space]" />
+                        <Button Style="{StaticResource toolbarIcon}" Content="&#xEE71;" Command="{Binding Export}" />
                     </ToolBar>
                     <Image Source="{Binding CurrentFrame.Value}" Stretch="{Binding ScaleToFill.Value, Converter={StaticResource stretchConverter}}" />
                 </DockPanel>

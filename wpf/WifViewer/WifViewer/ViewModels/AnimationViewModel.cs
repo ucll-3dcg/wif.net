@@ -1,9 +1,11 @@
 ﻿using Cells;
 using Commands;
 using ICSharpCode.AvalonEdit.Document;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -28,8 +30,8 @@ namespace WifViewer.ViewModels
             this.Frames = new ObservableCollection<WriteableBitmap>();
             this.CurrentFrameIndex = Cell.Create(0);
             this.CurrentFrame = Cell.Derived(this.CurrentFrameIndex, DeriveCurrentFrame);
+            this.IsDoneRendering = Cell.Create(false);
             this.MaximumFrameIndex = Cell.Derived(() => this.Frames.Count - 1);
-            this.Status = Cell.Create("Rendering...");
             this.Messages = new TextDocument();
             this.Frames.CollectionChanged += (sender, e) => OnFrameCollectionChanged();
             this.ToggleAnimation = EnabledCommand.FromDelegate(OnToggleAnimation);
@@ -37,6 +39,7 @@ namespace WifViewer.ViewModels
             this.ToggleScale = EnabledCommand.CreateTogglingCommand(ScaleToFill);
             this.FullScreen = Cell.Create(false);
             this.ToggleFullScreen = EnabledCommand.CreateTogglingCommand(FullScreen);
+            this.Export = CellCommand.FromDelegate(this.IsDoneRendering, OnExport);
         }
 
         private void OnToggleAnimation()
@@ -50,7 +53,7 @@ namespace WifViewer.ViewModels
 
         private void OnTimerTick()
         {
-            if ( this.Frames.Count > 0 )
+            if (this.Frames.Count > 0)
             {
                 this.CurrentFrameIndex.Value = (this.CurrentFrameIndex.Value + 1) % this.Frames.Count;
             }
@@ -83,7 +86,7 @@ namespace WifViewer.ViewModels
 
         private void LastFrameRendered()
         {
-            this.Status.Value = "Finished";
+            this.IsDoneRendering.Value = true;
         }
 
         private void Message(string message)
@@ -97,8 +100,6 @@ namespace WifViewer.ViewModels
 
         public Cell<int> MaximumFrameIndex { get; }
 
-        public Cell<string> Status { get; }
-
         public TextDocument Messages { get; }
 
         public Cell<bool> IsAnimating { get; }
@@ -111,9 +112,46 @@ namespace WifViewer.ViewModels
 
         public ICommand ToggleFullScreen { get; }
 
+        public Cell<bool> IsDoneRendering { get; }
+
+        public ICommand Export { get; }
+
         public IRenderReceiver CreateReceiver()
         {
             return new RendererReceiver(this);
+        }
+
+        private void OnExport()
+        {
+            var saveDialog = new SaveFileDialog()
+            {
+                Filter = "Gif Files|*.gif",
+                AddExtension = true,
+                OverwritePrompt = true,
+                ValidateNames = true
+            };
+
+            if ( saveDialog.ShowDialog() == true )
+            {
+                var frames = new List<WriteableBitmap>(this.Frames);
+                var path = saveDialog.FileName;
+
+                ThreadPool.QueueUserWorkItem(_ =>
+                {
+                    var encoder = new GifBitmapEncoder();
+
+                    foreach (var frame in frames)
+                    {
+                        var bitmapFrame = BitmapFrame.Create(frame);
+                        encoder.Frames.Add(bitmapFrame);
+                    }
+
+                    using (var file = File.OpenWrite(path))
+                    {
+                        encoder.Save(file);
+                    }
+                });
+            }
         }
 
         private class RendererReceiver : IRenderReceiver
