@@ -74,7 +74,6 @@
     <Compile Include="Commands\EnabledCommand.cs" />
     <Compile Include="Converters\BoolConverter.cs" />
     <Compile Include="DocumentViewModel.cs" />
-    <Compile Include="EditorViewModel.cs" />
     <Compile Include="MainViewModel.cs" />
     <Compile Include="MovieExporter.cs" />
     <Compile Include="Renderer.cs" />

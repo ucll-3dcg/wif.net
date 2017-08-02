@@ -25,6 +25,7 @@ namespace WifViewer
             this.Path = Cell.Create(path);
             this.ShortPath = this.Path;
             this.SaveScript = EnabledCommand.FromDelegate(OnSaveScript);
+            this.SaveScriptAs = EnabledCommand.FromDelegate(OnSaveScriptAs);
             this.RenderScript = EnabledCommand.FromDelegate(OnRenderScript);
             this.IsDirty = Cell.Create(false);
             this.Source.Changed += (s, e) => OnSourceChanged();
@@ -52,6 +53,8 @@ namespace WifViewer
 
         public ICommand SaveScript { get; }
 
+        public ICommand SaveScriptAs { get; }
+
         public ICommand RenderScript { get; }
 
         private void OnRenderScript()
@@ -69,28 +72,32 @@ namespace WifViewer
         {
             if (this.Path.Value == "untitled")
             {
-                var fileDialog = new SaveFileDialog()
-                {
-                    Filter = "Scripts|*.chai",
-                    AddExtension = true,
-                    CheckPathExists = true,
-                    OverwritePrompt = true
-                };
-
-                var result = fileDialog.ShowDialog();
-
-                if (result == true)
-                {
-                    this.Path.Value = fileDialog.FileName;
-                }
-                else
-                {
-                    return;
-                }
+                OnSaveScriptAs();
             }
+            else
+            {
+                File.WriteAllText(this.Path.Value, this.SourceString);
+                this.IsDirty.Value = false;
+            }
+        }
 
-            File.WriteAllText(this.Path.Value, this.SourceString);
-            this.IsDirty.Value = false;
+        private void OnSaveScriptAs()
+        {
+            var fileDialog = new SaveFileDialog()
+            {
+                Filter = "Scripts|*.chai",
+                AddExtension = true,
+                CheckPathExists = true,
+                OverwritePrompt = true
+            };
+
+            var result = fileDialog.ShowDialog();
+
+            if (result == true)
+            {
+                this.Path.Value = fileDialog.FileName;
+                OnSaveScript();
+            }
         }
 
         private void OnSourceChanged()

@@ -34,6 +34,7 @@
             <Button Style="{StaticResource toolbarIcon}" Content="&#xE8F4;" ToolTip="New [Ctrl+N]" Command="{Binding NewScript}" />
             <Button Style="{StaticResource toolbarIcon}" Content="&#xE8E5;" ToolTip="Open [Ctrl+O]" Command="{Binding LoadScript}" />
             <Button Style="{StaticResource toolbarIcon}" Content="&#xE74E;" ToolTip="Save [Ctrl+S]" Command="{Binding CurrentDocument.Value.SaveScript}" />
+            <Button Style="{StaticResource toolbarIcon}" Content="&#xE792;" ToolTip="Save as" Command="{Binding CurrentDocument.Value.SaveScriptAs}" />
             <Button Style="{StaticResource toolbarIcon}" Content="&#xE2AC;" ToolTip="Render" Command="{Binding CurrentDocument.Value.RenderScript}" />
         </ToolBar>
         <TabControl ItemsSource="{Binding Documents}" SelectedItem="{Binding CurrentDocument.Value}">
