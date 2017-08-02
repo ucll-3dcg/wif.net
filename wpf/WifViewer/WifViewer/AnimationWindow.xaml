@@ -55,7 +55,8 @@
                         <TextBlock Text="{Binding MaximumFrameIndex.Value}" Width="20" Margin="5" TextAlignment="Center" />
                         <Slider Minimum="0" Maximum="{Binding MaximumFrameIndex.Value}" Value="{Binding CurrentFrameIndex.Value}" Width="100" Margin="5" />
                         <CheckBox Style="{StaticResource toolbarIcon}" IsChecked="{Binding Timer.IsEnabled}" Content="{Binding Timer.IsEnabled, Converter={StaticResource toggleAnimatingConverter}}" FontFamily="Segoe MDL2 Assets" ToolTip="Toggle Animation [Space]" />
-                        <Button Style="{StaticResource toolbarIcon}" Content="&#xEE71;" Command="{Binding Export}" />
+                        <Button Style="{StaticResource toolbarIcon}" Content="&#xE799;" Command="{Binding ExportFrame}" />
+                        <Button Style="{StaticResource toolbarIcon}" Content="&#xE81E;" Command="{Binding ExportMovie}" />
                     </ToolBar>
                     <Image Source="{Binding CurrentFrame.Value}" Stretch="{Binding ScaleToFill.Value, Converter={StaticResource stretchConverter}}" />
                 </DockPanel>

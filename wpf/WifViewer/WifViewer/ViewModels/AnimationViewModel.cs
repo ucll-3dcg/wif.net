@@ -39,7 +39,8 @@ namespace WifViewer.ViewModels
             this.ToggleScale = EnabledCommand.CreateTogglingCommand(ScaleToFill);
             this.FullScreen = Cell.Create(false);
             this.ToggleFullScreen = EnabledCommand.CreateTogglingCommand(FullScreen);
-            this.Export = CellCommand.FromDelegate(this.IsDoneRendering, OnExport);
+            this.ExportFrame = EnabledCommand.FromDelegate(OnExportFrame);
+            this.ExportMovie = CellCommand.FromDelegate(this.IsDoneRendering, OnExportMovie);
         }
 
         private void OnToggleAnimation()
@@ -114,14 +115,60 @@ namespace WifViewer.ViewModels
 
         public Cell<bool> IsDoneRendering { get; }
 
-        public ICommand Export { get; }
+        public ICommand ExportFrame { get; }
+
+        public ICommand ExportMovie { get; }
 
         public IRenderReceiver CreateReceiver()
         {
             return new RendererReceiver(this);
         }
 
-        private void OnExport()
+        private void OnExportFrame()
+        {
+            var saveDialog = new SaveFileDialog()
+            {
+                Filter = "Gif Files|*.gif|Jpeg Files|*.jpeg|Png Files|*.png",
+                AddExtension = true,
+                OverwritePrompt = true,
+                ValidateNames = true
+            };
+
+            if (saveDialog.ShowDialog() == true)
+            {
+                var frame = this.CurrentFrame.Value;
+                var path = saveDialog.FileName;
+
+                BitmapEncoder encoder;
+
+                if (path.ToLower().EndsWith(".png"))
+                {
+                    encoder = new PngBitmapEncoder();
+                }
+                else if (path.ToLower().EndsWith(".jpeg"))
+                {
+                    encoder = new JpegBitmapEncoder();
+                }
+                else if (path.ToLower().EndsWith(".gif"))
+                {
+                    encoder = new GifBitmapEncoder();
+                }
+                else
+                {
+                    MessageBox.Show("Bug");
+                    return;
+                }
+
+                encoder.Frames.Add(BitmapFrame.Create(frame));
+
+                using (var file = File.OpenWrite(path))
+                {
+                    encoder.Save(file);
+                }
+            }
+        }
+
+        private void OnExportMovie()
         {
             var saveDialog = new SaveFileDialog()
             {
@@ -131,7 +178,7 @@ namespace WifViewer.ViewModels
                 ValidateNames = true
             };
 
-            if ( saveDialog.ShowDialog() == true )
+            if (saveDialog.ShowDialog() == true)
             {
                 var frames = new List<WriteableBitmap>(this.Frames);
                 var path = saveDialog.FileName;
