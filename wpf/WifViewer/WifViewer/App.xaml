@@ -5,6 +5,10 @@
              ShutdownMode="OnMainWindowClose"
              StartupUri="EditorWindow.xaml">
     <Application.Resources>
-         
+        <Style x:Key="toolbarIcon" TargetType="ButtonBase">
+            <Setter Property="FontFamily" Value="Segoe MDL2 Assets" />
+            <Setter Property="FontSize" Value="22px" />
+            <Setter Property="Padding" Value="5" />
+        </Style>
     </Application.Resources>
 </Application>

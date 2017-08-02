@@ -10,7 +10,7 @@
         Title="{Binding Path.Value, StringFormat=3D Studio [{0}]}">
     <Window.InputBindings>
         <KeyBinding Modifiers="Ctrl" Key="N" Command="{Binding NewScript}" />
-        <KeyBinding Modifiers="Ctrl" Key="O" Command="{Binding OpenScript}" />
+        <KeyBinding Modifiers="Ctrl" Key="O" Command="{Binding LoadScript}" />
         <KeyBinding Modifiers="Ctrl" Key="S" Command="{Binding SaveScript}" />
         <KeyBinding Key="F5" Command="{Binding RenderScript}" />
     </Window.InputBindings>
@@ -28,28 +28,17 @@
             </MenuItem>
         </Menu>
         <ToolBar DockPanel.Dock="Top">
-            <Button FontSize="22px" FontFamily="Segoe MDL2 Assets" Content="&#xE8F4;" Padding="5px" ToolTip="New" Command="{Binding NewScript}" />
-            <Button FontSize="22px" FontFamily="Segoe MDL2 Assets" Content="&#xE8E5;" Padding="5px" ToolTip="Open" Command="{Binding LoadScript}" />
-            <Button FontSize="22px" FontFamily="Segoe MDL2 Assets" Content="&#xE74E;" Padding="5px" ToolTip="Save" Command="{Binding SaveScript}" />
-            <Button FontSize="22px" FontFamily="Segoe MDL2 Assets" Content="&#xE2AC;" Padding="5px" ToolTip="Render" Command="{Binding RenderScript}" />
+            <Button Style="{StaticResource toolbarIcon}" Content="&#xE8F4;" ToolTip="New [Ctrl+N]" Command="{Binding NewScript}" />
+            <Button Style="{StaticResource toolbarIcon}" Content="&#xE8E5;" ToolTip="Open [Ctrl+O]" Command="{Binding LoadScript}" />
+            <Button Style="{StaticResource toolbarIcon}" Content="&#xE74E;" ToolTip="Save [Ctrl+S]" Command="{Binding SaveScript}" />
+            <Button Style="{StaticResource toolbarIcon}" Content="&#xE2AC;" ToolTip="Render" Command="{Binding RenderScript}" />
         </ToolBar>
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition />
-                <RowDefinition Height="auto" />
-                <RowDefinition />
-            </Grid.RowDefinitions>
-
-            <avalon:TextEditor
-                    Grid.Row="0"
-                    LineNumbersForeground="Magenta"
-				    FontFamily="Consolas"
-				    FontSize="10pt"
-				    SyntaxHighlighting="JavaScript"
-                    ShowLineNumbers="True"
-                    Document="{Binding Source}" />
-
-            <GridSplitter Grid.Row="1" Height="5" HorizontalAlignment="Stretch" />
-        </Grid>
+        <avalon:TextEditor
+            LineNumbersForeground="Magenta"
+			FontFamily="Consolas"
+			FontSize="10pt"
+			SyntaxHighlighting="JavaScript"
+            ShowLineNumbers="True"
+            Document="{Binding Source}" />
     </DockPanel>
 </Window>

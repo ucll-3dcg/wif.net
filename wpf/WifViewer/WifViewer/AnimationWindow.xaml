@@ -5,22 +5,50 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:avalon="http://icsharpcode.net/sharpdevelop/avalonedit"
         xmlns:local="clr-namespace:WifViewer"
+        xmlns:converters="clr-namespace:WifViewer.Converters"        
         mc:Ignorable="d"
-        Title="AnimationWindow" Height="300" Width="300">
+        Title="AnimationWindow" Height="500" Width="500">
+    <Window.Resources>
+        <converters:BoolConverter x:Key="toggleAnimatingConverter" True="&#xE103;" False="&#xE102;" />
+        <converters:BoolConverter x:Key="stretchConverter" True="Uniform" False="None" />
+    </Window.Resources>
+    <Window.InputBindings>
+        <KeyBinding Key="Space" Command="{Binding ToggleAnimation}" />
+        <KeyBinding Key="S" Command="{Binding ToggleScale}" />
+        <KeyBinding Key="F" Command="{Binding ToggleFullScreen}" />
+    </Window.InputBindings>
+    <Window.WindowStyle>
+        <Binding Path="FullScreen.Value">
+            <Binding.Converter>
+                <converters:BoolConverter True="None" False="SingleBorderWindow" />
+            </Binding.Converter>
+        </Binding>
+    </Window.WindowStyle>
+    <Window.WindowState>
+        <Binding Path="FullScreen.Value">
+            <Binding.Converter>
+                <converters:BoolConverter True="Maximized" False="Normal" />
+            </Binding.Converter>
+        </Binding>
+    </Window.WindowState>
     <DockPanel>
         <StatusBar DockPanel.Dock="Bottom">
             <TextBlock Text="{Binding Status.Value}" />
         </StatusBar>
-        
+
         <TabControl x:Name="tabControl" SelectedIndex="1">
             <TabItem Header="Result" Visibility="Collapsed" x:Name="resultTab">
                 <DockPanel>
-                    <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
-                        <TextBox Text="{Binding CurrentFrameIndex.Value}" Width="40" Margin="5" />
-                        <TextBlock Text="{Binding MaximumFrameIndex.Value, StringFormat=of {0}}" Margin="5" />
+                    <ToolBar DockPanel.Dock="Top">
+                        <CheckBox Style="{StaticResource toolbarIcon}" IsChecked="{Binding ScaleToFill.Value}" Content="&#xECE9;" ToolTip="Scale to fit [S]" />
+                        <CheckBox Style="{StaticResource toolbarIcon}" IsChecked="{Binding FullScreen.Value}" Content="&#xE740;" ToolTip="Full Screen [F]" />
+                        <TextBlock Text="{Binding CurrentFrameIndex.Value}" Width="20" Margin="5" TextAlignment="Center" />
+                        <TextBlock Text="of" Margin="5" />
+                        <TextBlock Text="{Binding MaximumFrameIndex.Value}" Width="20" Margin="5" TextAlignment="Center" />
                         <Slider Minimum="0" Maximum="{Binding MaximumFrameIndex.Value}" Value="{Binding CurrentFrameIndex.Value}" Width="100" Margin="5" />
-                    </StackPanel>
-                    <Image Source="{Binding CurrentFrame.Value}" />
+                        <CheckBox Style="{StaticResource toolbarIcon}" IsChecked="{Binding Timer.IsEnabled}" Content="{Binding Timer.IsEnabled, Converter={StaticResource toggleAnimatingConverter}}" FontFamily="Segoe MDL2 Assets" ToolTip="Toggle Animation [Space]" />
+                    </ToolBar>
+                    <Image Source="{Binding CurrentFrame.Value}" Stretch="{Binding ScaleToFill.Value, Converter={StaticResource stretchConverter}}" />
                 </DockPanel>
             </TabItem>
             <TabItem Header="Messages">

@@ -1,4 +1,5 @@
 ﻿using Cells;
+using Commands;
 using ICSharpCode.AvalonEdit.Document;
 using System;
 using System.Collections.Generic;
@@ -8,6 +9,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Input;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 
@@ -17,6 +19,11 @@ namespace WifViewer
     {
         public AnimationViewModel()
         {
+            this.Timer = new DispatcherTimer(TimeSpan.FromMilliseconds(50), DispatcherPriority.Background, (o, e) => OnTimerTick(), Application.Current.Dispatcher)
+            {
+                IsEnabled = false
+            };
+
             this.Frames = new ObservableCollection<WriteableBitmap>();
             this.CurrentFrameIndex = Cell.Create(0);
             this.CurrentFrame = Cell.Derived(this.CurrentFrameIndex, DeriveCurrentFrame);
@@ -24,6 +31,28 @@ namespace WifViewer
             this.Status = Cell.Create("Rendering...");
             this.Messages = new TextDocument();
             this.Frames.CollectionChanged += (sender, e) => OnFrameCollectionChanged();
+            this.ToggleAnimation = EnabledCommand.FromDelegate(OnToggleAnimation);
+            this.ScaleToFill = Cell.Create(true);
+            this.ToggleScale = EnabledCommand.CreateTogglingCommand(ScaleToFill);
+            this.FullScreen = Cell.Create(false);
+            this.ToggleFullScreen = EnabledCommand.CreateTogglingCommand(FullScreen);
+        }
+
+        private void OnToggleAnimation()
+        {
+            this.Timer.IsEnabled = !this.Timer.IsEnabled;
+        }
+
+        public ICommand ToggleAnimation { get; }
+
+        public DispatcherTimer Timer { get; }
+
+        private void OnTimerTick()
+        {
+            if ( this.Frames.Count > 0 )
+            {
+                this.CurrentFrameIndex.Value = (this.CurrentFrameIndex.Value + 1) % this.Frames.Count;
+            }
         }
 
         private void OnFrameCollectionChanged()
@@ -70,6 +99,16 @@ namespace WifViewer
         public Cell<string> Status { get; }
 
         public TextDocument Messages { get; }
+
+        public Cell<bool> IsAnimating { get; }
+
+        public Cell<bool> ScaleToFill { get; }
+
+        public ICommand ToggleScale { get; }
+
+        public Cell<bool> FullScreen { get; }
+
+        public ICommand ToggleFullScreen { get; }
 
         public IRenderReceiver CreateReceiver()
         {

@@ -72,6 +72,7 @@
     <Compile Include="Cells\Var.cs" />
     <Compile Include="Commands\CellCommand.cs" />
     <Compile Include="Commands\EnabledCommand.cs" />
+    <Compile Include="Converters\BoolConverter.cs" />
     <Compile Include="EditorViewModel.cs" />
     <Compile Include="EditorWindow.xaml.cs">
       <DependentUpon>EditorWindow.xaml</DependentUpon>

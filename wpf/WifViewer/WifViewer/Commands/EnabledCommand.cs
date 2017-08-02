@@ -15,6 +15,11 @@ namespace Commands
             return new ActionEnabledCommand( parameter => action( (T) parameter ) );
         }
 
+        public static EnabledCommand CreateTogglingCommand(Cell<bool> cell)
+        {
+            return FromDelegate(() => cell.Value = !cell.Value);
+        }
+
         public static EnabledCommand FromDelegate( Action<object> action )
         {
             return new ActionEnabledCommand( action );
