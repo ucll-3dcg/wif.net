@@ -73,16 +73,17 @@
     <Compile Include="Commands\CellCommand.cs" />
     <Compile Include="Commands\EnabledCommand.cs" />
     <Compile Include="Converters\BoolConverter.cs" />
+    <Compile Include="DocumentViewModel.cs" />
     <Compile Include="EditorViewModel.cs" />
     <Compile Include="EditorWindow.xaml.cs">
       <DependentUpon>EditorWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="MainViewModel.cs" />
     <Compile Include="MovieExporter.cs" />
     <Compile Include="Renderer.cs" />
     <Compile Include="AnimationWindow.xaml.cs">
       <DependentUpon>AnimationWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ViewModel.cs" />
     <Compile Include="WifLoader.cs" />
     <Page Include="EditorWindow.xaml">
       <SubType>Designer</SubType>

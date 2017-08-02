@@ -4,220 +4,54 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
-	    xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit"
+	    xmlns:avalon="http://icsharpcode.net/sharpdevelop/avalonedit"
         xmlns:local="clr-namespace:WifViewer"
         mc:Ignorable="d"
+        Title="3D Studio"
         x:Name="mainWindow" Height="700" Width="1000">
 
-    <Window.Title>
-        <Binding Path="ChaiPath.Value">
-            <!--<Binding.Converter>
-                <StaticResource ResourceKey="windowTitleConverter" />
-            </Binding.Converter>-->
-        </Binding>
-    </Window.Title>
     <Window.InputBindings>
-        <KeyBinding Modifiers="Ctrl" Key="N" Command="{Binding Path=NewChai}" />
-        <KeyBinding Modifiers="Ctrl" Key="S" Command="{Binding Path=SaveChai}" />
-        <KeyBinding Modifiers="Ctrl+Shift" Key="S" Command="{Binding Path=SaveAsChai}" />
-        <KeyBinding Modifiers="Ctrl" Key="O" Command="{Binding Path=OpenChai}" />
-        <KeyBinding Modifiers="Ctrl" Key="P" Command="{Binding Path=ToggleAnimation}" />
-        <KeyBinding Modifiers="Ctrl" Key="R" Command="{Binding Path=SetRaytracer}" />
-        <KeyBinding Modifiers="Ctrl" Key="C" Command="{Binding Path=ClearConsole}" />
-        <KeyBinding Key="F5" Command="{Binding Path=Build}" />
+        <KeyBinding Modifiers="Ctrl" Key="N" Command="{Binding NewScript}" />
+        <KeyBinding Modifiers="Ctrl" Key="O" Command="{Binding LoadScript}" />
+        <KeyBinding Modifiers="Ctrl" Key="S" Command="{Binding CurrentDocument.Value.SaveScript}" />
+        <KeyBinding Key="F5" Command="{Binding CurrentDocument.Value.RenderScript}" />
     </Window.InputBindings>
     <DockPanel>
         <Menu DockPanel.Dock="Top">
-            <MenuItem Header="File">
-                <MenuItem Header="New Script" Command="{Binding Path=NewChai}" InputGestureText="Ctrl+N" />
-                <Separator/>
-                <MenuItem Header="Save..." Command="{Binding Path=SaveChai}" InputGestureText="Ctrl+S" />
-                <MenuItem Header="Save As..." Command="{Binding Path=SaveAsChai}" InputGestureText="Ctrl+Shift+S" />
-                <MenuItem Header="Open..." Command="{Binding Path=OpenChai}" InputGestureText="Ctrl+O" />
-                <Separator/>
-                <MenuItem Header="Export..." Command="{Binding Path=Export}" />
-                <MenuItem Header="Refresh" Command="{Binding Path=Refresh}" InputGestureText="F5" />
-                <Separator/>
-
-                <MenuItem Header="Exit" Command="{Binding Path=Exit}"  InputGestureText="Alt+F4"/>
+            <MenuItem Header="_Script">
+                <MenuItem Header="_New" InputGestureText="Ctrl+N" Command="{Binding NewScript}" />
+                <MenuItem Header="_Open" InputGestureText="Ctrl+O" Command="{Binding LoadScript}" />
+                <MenuItem Header="_Save" InputGestureText="Ctrl+S" Command="{Binding CurrentDocument.Value.SaveScript}" />
+                <Separator />
+                <MenuItem Header="E_xit" InputGestureText="Alt+F4" />
             </MenuItem>
-            <MenuItem Header="Run">
-                <MenuItem Header="Build WIF" Command="{Binding Path=Build}" InputGestureText="F5" />
-                <MenuItem Header="Set raytracer.exe..." Command="{Binding Path=SetRaytracer}" InputGestureText="Ctrl+R" />
-                <Separator/>
-                <MenuItem Header="Clear console" Command="{Binding Path=ClearConsole}"  InputGestureText="Ctrl+C"  />
+            <MenuItem Header="_Animation">
+                <MenuItem Header="_Open" InputGestureText="Ctrl+W" Command="{Binding LoadWif}" />
             </MenuItem>
         </Menu>
-        <ToolBarTray DockPanel.Dock="Top">
-            <ToolBar>
-                <Button FontSize="22px" FontFamily="Segoe MDL2 Assets" Command="{Binding Path=NewChai}" Content="&#xE8F4;" Padding="5px" ToolTip="New [Ctrl+N]" />
-                <Button FontSize="22px" FontFamily="Segoe MDL2 Assets" Command="{Binding Path=SaveChai}" Content="&#xE74E;" Padding="5px" ToolTip="Save [Ctrl+S]" />
-                <Button FontSize="22px" FontFamily="Segoe MDL2 Assets" Command="{Binding Path=SaveAsChai}" Content="&#xE792;" Padding="5px" ToolTip="Save As [Ctrl+Shift+S]" />
-                <Button FontSize="22px" FontFamily="Segoe MDL2 Assets" Command="{Binding Path=OpenChai}" Content="&#xE8E5;" Padding="5px" ToolTip="Open [Ctrl+O]" />
-                <Separator/>
-
-                <Button FontSize="22px" FontFamily="Segoe MDL2 Assets" Command="{Binding Path=Build}" Content="&#xE2AC;" Padding="5px" ToolTip="Build Now [F5]" />
-                <Separator/>
-                <Separator/>
-                <Border>
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="Frame" VerticalAlignment="Center" Margin="5" />
-                        <Slider Value="{Binding CurrentFrameIndex.Value}" Minimum="0" Maximum="{Binding LastFrameIndex.Value}" TickFrequency="1" Margin="10" Width="150">
-                            <Slider.ToolTip>
-                                <TextBlock Text="Frame" />
-                            </Slider.ToolTip>
-                        </Slider>
-                    </StackPanel>
-                </Border>
-                <CheckBox Content="Animate" IsChecked="{Binding IsAnimating.Value}" VerticalAlignment="Center" Margin="5" >
-                    <CheckBox.Template>
-                        <ControlTemplate TargetType="{x:Type CheckBox}">
-                            <Border x:Name="border" Padding="5" BorderThickness="1" BorderBrush="#BBB" CornerRadius="4" Width="32" Height="32" Background="Transparent">
-                                <Border.ToolTip>
-                                    <TextBlock Text="Start/stop animation" />
-                                </Border.ToolTip>
-                                <ContentControl x:Name="content" HorizontalAlignment="Center" VerticalAlignment="Center" />
-                            </Border>
-                            <ControlTemplate.Triggers>
-                                <Trigger Property="IsChecked" Value="False">
-                                    <Setter TargetName="content" Property="Content">
-                                        <Setter.Value>
-                                            <Canvas Width="10" Height="20">
-                                                <Polygon Fill="Black">
-                                                    <Polygon.Points>
-                                                        <Point X="0" Y="0" />
-                                                        <Point X="10" Y="10" />
-                                                        <Point X="0" Y="20" />
-                                                    </Polygon.Points>
-                                                </Polygon>
-                                            </Canvas>
-                                        </Setter.Value>
-                                    </Setter>
-                                </Trigger>
-                                <Trigger Property="IsChecked" Value="True">
-                                    <Setter TargetName="content" Property="Content">
-                                        <Setter.Value>
-                                            <Canvas Width="15" Height="20">
-                                                <Rectangle Width="5" Height="20" Canvas.Left="0" Canvas.Top="0" Fill="Black" />
-                                                <Rectangle Width="5" Height="20" Canvas.Left="10" Canvas.Top="0" Fill="Black" />
-                                            </Canvas>
-                                        </Setter.Value>
-                                    </Setter>
-                                </Trigger>
-                                <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter TargetName="border" Property="Background" Value="#CCC" />
-                                </Trigger>
-                            </ControlTemplate.Triggers>
-                        </ControlTemplate>
-                    </CheckBox.Template>
-                </CheckBox>
-                <TextBlock Text="Animation Speed" VerticalAlignment="Center" Margin="5" />
-                <Slider Value="{Binding AnimationSpeed.Value, ElementName=mainWindow}" Minimum="10" Maximum="100" TickFrequency="10" Margin="10" Width="150">
-                    <Slider.ToolTip>
-                        <TextBlock Text="Animation speed" />
-                    </Slider.ToolTip>
-                </Slider>
-            </ToolBar>
-        </ToolBarTray>
-
-
-       
-
-        <StatusBar DockPanel.Dock="Bottom">
-            <TextBlock VerticalAlignment="Center">
-                <TextBlock.Text>
-                    <MultiBinding StringFormat="{}Frame {0} of {1} - Document untouched {2}">
-                        <Binding Path="CurrentFrameIndex.Value" />
-                        <Binding Path="LastFrameIndex.Value" />
-                        <Binding Path="IsEditorPrestine.Value" />
-                    </MultiBinding>
-                </TextBlock.Text>
-            </TextBlock>
-        </StatusBar>
-
-
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="1*"/>
-                <ColumnDefinition Width="4"/>
-                <ColumnDefinition Width="1*"/>
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="4*"/>
-                <RowDefinition Height="4"/>
-                <RowDefinition Height="1*"/>
-                <RowDefinition Height="20"/>
-            </Grid.RowDefinitions>
-            <avalonEdit:TextEditor  Grid.Row="0" Grid.RowSpan="4"
-				Name="textEditor"
-                LineNumbersForeground="Magenta"
-				FontFamily="Consolas"
-				FontSize="10pt"
-                Document="{Binding ChaiScript.Value}"
-				SyntaxHighlighting="JavaScript"
-                ShowLineNumbers="True">
-                    
-            </avalonEdit:TextEditor>
-            <GridSplitter Grid.Column="1"  Grid.RowSpan="4" Width="4" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
-            <Grid Background="Black" Grid.Row="0" Grid.Column="2">
-            <Image  Source="{Binding CurrentFrame.Value}" />
-            </Grid>
-            <GridSplitter 
-            ResizeDirection="Rows" 
-            Grid.Column="2" 
-            Grid.Row="1" 
-            Width="Auto" 
-            Height="4" 
-            HorizontalAlignment="Stretch" 
-            VerticalAlignment="Stretch" 
-            Margin="0"/>
-
-            <avalonEdit:TextEditor
-                Grid.Column="2"
-                Grid.Row="2" 
-				Name="textEditor0"
-                LineNumbersForeground="Magenta"
-				FontFamily="Consolas"
-				FontSize="10pt"
-                Document="{Binding ConsoleText.Value}"
-                IsReadOnly="True" />
-
-            <ProgressBar
-                Name="pbStatus" Grid.Row="3" Grid.Column="2"  Maximum="{Binding Path=FramesToBuild.Value}" Value="{Binding Path=BuiltFrames.Value}" >
-
-                <ProgressBar.Style>
-                    <Style TargetType="{x:Type ProgressBar}">
-                        <Setter Property="Visibility" Value="Visible"/>
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding FramesToBuild.Value}" Value="0">
-                                <Setter Property="Visibility" Value="Hidden"/>
-                            </DataTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </ProgressBar.Style>
-
-            </ProgressBar>
-            <TextBlock Grid.Row="3" Grid.Column="2" 
-           HorizontalAlignment="Center" 
-           VerticalAlignment="Center" >
-                <Run Text="{Binding ElementName=pbStatus, Path=Value, StringFormat={}{0:0} frames}"></Run>
-                <Run> out of </Run>
-                <Run Text="{Binding ElementName=pbStatus, Path=Maximum, StringFormat={}{0:0} done.}"></Run>
-
-                <TextBlock.Style>
-                    <Style TargetType="{x:Type TextBlock}">
-                        <Setter Property="Visibility" Value="Visible"/>
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding FramesToBuild.Value}" Value="0">
-                                <Setter Property="Visibility" Value="Hidden"/>
-                            </DataTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </TextBlock.Style>
-            
-            
-            </TextBlock>
-
-        </Grid>
-        </DockPanel>
+        <ToolBar DockPanel.Dock="Top">
+            <Button Style="{StaticResource toolbarIcon}" Content="&#xE8F4;" ToolTip="New [Ctrl+N]" Command="{Binding NewScript}" />
+            <Button Style="{StaticResource toolbarIcon}" Content="&#xE8E5;" ToolTip="Open [Ctrl+O]" Command="{Binding LoadScript}" />
+            <Button Style="{StaticResource toolbarIcon}" Content="&#xE74E;" ToolTip="Save [Ctrl+S]" Command="{Binding CurrentDocument.Value.SaveScript}" />
+            <Button Style="{StaticResource toolbarIcon}" Content="&#xE2AC;" ToolTip="Render" Command="{Binding CurrentDocument.Value.RenderScript}" />
+        </ToolBar>
+        <TabControl ItemsSource="{Binding Documents}" SelectedItem="{Binding CurrentDocument.Value}">
+            <TabControl.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding ShortPath.Value}" />
+                </DataTemplate>
+            </TabControl.ItemTemplate>
+            <TabControl.ContentTemplate>
+                <DataTemplate>
+                    <avalon:TextEditor
+                            LineNumbersForeground="Magenta"
+			                FontFamily="Consolas"
+			                FontSize="10pt"
+			                SyntaxHighlighting="JavaScript"
+                            ShowLineNumbers="True"
+                            Document="{Binding Source}" />
+                </DataTemplate>
+            </TabControl.ContentTemplate>
+        </TabControl>
+    </DockPanel>
 </Window>
