@@ -26,6 +26,8 @@ namespace WifViewer
             this.ShortPath = this.Path;
             this.SaveScript = EnabledCommand.FromDelegate(OnSaveScript);
             this.RenderScript = EnabledCommand.FromDelegate(OnRenderScript);
+            this.IsDirty = Cell.Create(false);
+            this.Source.Changed += (s, e) => OnSourceChanged();
         }
 
         public TextDocument Source { get; }
@@ -33,6 +35,8 @@ namespace WifViewer
         public Cell<string> Path { get; }
 
         public Cell<string> ShortPath { get; }
+
+        public Cell<bool> IsDirty { get; }
 
         public string SourceString
         {
@@ -86,6 +90,12 @@ namespace WifViewer
             }
 
             File.WriteAllText(this.Path.Value, this.SourceString);
+            this.IsDirty.Value = false;
+        }
+
+        private void OnSourceChanged()
+        {
+            this.IsDirty.Value = true;
         }
     }
 }

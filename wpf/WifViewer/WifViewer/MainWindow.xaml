@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        xmlns:converters="clr-namespace:WifViewer.Converters"
 	    xmlns:avalon="http://icsharpcode.net/sharpdevelop/avalonedit"
         xmlns:local="clr-namespace:WifViewer"
         mc:Ignorable="d"
@@ -38,7 +39,15 @@
         <TabControl ItemsSource="{Binding Documents}" SelectedItem="{Binding CurrentDocument.Value}">
             <TabControl.ItemTemplate>
                 <DataTemplate>
-                    <TextBlock Text="{Binding ShortPath.Value}" />
+                    <TextBlock Text="{Binding ShortPath.Value}">
+                        <TextBlock.FontWeight>
+                            <Binding Path="IsDirty.Value">
+                                <Binding.Converter>
+                                    <converters:BoolConverter True="Bold" False="Normal" />
+                                </Binding.Converter>
+                            </Binding>
+                        </TextBlock.FontWeight>
+                    </TextBlock>
                 </DataTemplate>
             </TabControl.ItemTemplate>
             <TabControl.ContentTemplate>

@@ -131,7 +131,7 @@ namespace WifViewer
                 }
             }
 
-            File.WriteAllText(this.Path.Value, this.SourceString);
+            File.WriteAllText(this.Path.Value, this.SourceString);            
         }
     }
 }
