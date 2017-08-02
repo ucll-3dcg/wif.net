@@ -59,7 +59,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="AnimationViewModel.cs" />
+    <Compile Include="ViewModels\AnimationViewModel.cs" />
     <Compile Include="AvalonEditExtra\ITextMarker.cs" />
     <Compile Include="AvalonEditExtra\TextMarkerService.cs" />
     <Compile Include="Cells\Cell.cs" />
@@ -74,7 +74,7 @@
     <Compile Include="Commands\EnabledCommand.cs" />
     <Compile Include="Converters\BoolConverter.cs" />
     <Compile Include="DocumentViewModel.cs" />
-    <Compile Include="MainViewModel.cs" />
+    <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="MovieExporter.cs" />
     <Compile Include="Renderer.cs" />
     <Compile Include="AnimationWindow.xaml.cs">

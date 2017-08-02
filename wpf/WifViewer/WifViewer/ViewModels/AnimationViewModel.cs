@@ -13,7 +13,7 @@ using System.Windows.Input;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 
-namespace WifViewer
+namespace WifViewer.ViewModels
 {
     public class AnimationViewModel
     {
