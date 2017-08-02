@@ -40,7 +40,7 @@
         <TabControl ItemsSource="{Binding Documents}" SelectedItem="{Binding CurrentDocument.Value}">
             <TabControl.ItemTemplate>
                 <DataTemplate>
-                    <TextBlock Text="{Binding ShortPath.Value}">
+                    <TextBlock Text="{Binding ShortPath.Value}" ToolTip="{Binding Path.Value}">
                         <TextBlock.FontWeight>
                             <Binding Path="IsDirty.Value">
                                 <Binding.Converter>

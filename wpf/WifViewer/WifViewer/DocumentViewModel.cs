@@ -23,7 +23,7 @@ namespace WifViewer
         {
             this.Source = new TextDocument(contents);
             this.Path = Cell.Create(path);
-            this.ShortPath = this.Path;
+            this.ShortPath = Cell.Derived(this.Path, DeriveShortPath);
             this.SaveScript = EnabledCommand.FromDelegate(OnSaveScript);
             this.SaveScriptAs = EnabledCommand.FromDelegate(OnSaveScriptAs);
             this.RenderScript = EnabledCommand.FromDelegate(OnRenderScript);
@@ -56,6 +56,11 @@ namespace WifViewer
         public ICommand SaveScriptAs { get; }
 
         public ICommand RenderScript { get; }
+
+        private string DeriveShortPath(string path)
+        {
+            return System.IO.Path.GetFileName(path);
+        }
 
         private void OnRenderScript()
         {
