@@ -1,0 +1,14 @@
+﻿<Application x:Class="WifViewer.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:WifViewer"
+             ShutdownMode="OnMainWindowClose"
+             StartupUri="MainWindow.xaml">
+    <Application.Resources>
+        <Style x:Key="toolbarIcon" TargetType="ButtonBase">
+            <Setter Property="FontFamily" Value="Segoe MDL2 Assets" />
+            <Setter Property="FontSize" Value="22px" />
+            <Setter Property="Padding" Value="5" />
+        </Style>
+    </Application.Resources>
+</Application>
