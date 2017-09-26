@@ -34,6 +34,16 @@ namespace WifViewer
             InitializeComponent();
 
             this.DataContext = new MainViewModel();
+
+            CheckForRaytracer();
+        }
+
+        private void CheckForRaytracer()
+        {
+            if ( !File.Exists(Configuration.RAYTRACER_PATH) )
+            {
+                MessageBox.Show(this, $"Could not find {Configuration.RAYTRACER_PATH}.\nYou will not be able to render images.\nOpen Configuration.cs, change the path and recompile.", "Oops", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
     }
 
