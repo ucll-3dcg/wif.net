@@ -78,6 +78,7 @@
     <Compile Include="Rendering\Base64Decoder.cs" />
     <Compile Include="Rendering\BitmapDecoder.cs" />
     <Compile Include="Rendering\BlockDecoder.cs" />
+    <Compile Include="Configuration.cs" />
     <Compile Include="Rendering\ExternalProcess.cs" />
     <Compile Include="Rendering\IConsumer.cs" />
     <Compile Include="Rendering\IRenderReceiver.cs" />

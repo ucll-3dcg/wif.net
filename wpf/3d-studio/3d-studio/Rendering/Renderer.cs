@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Rendering;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -25,13 +26,6 @@ namespace WifViewer.Rendering
 
     public class Renderer
     {
-        private readonly string raytracerPath;
-
-        public Renderer()
-        {
-            this.raytracerPath = @"E:\repos\ucll\shared\scripts\raytracer.exe";
-        }
-
         public void Render(string script, IRenderReceiver receiver)
         {
             var bitmapDecoder = new BitmapDecoder(new RenderReceiverAdapter(receiver));
@@ -40,7 +34,7 @@ namespace WifViewer.Rendering
 
             var process = new ExternalProcess()
             {
-                ExecutablePath = this.raytracerPath,
+                ExecutablePath = Configuration.RAYTRACER_PATH,
                 CommandLineArguments = "-s -",
                 Input = script,
                 OnOutputDataReceived = blockDecoder.Consume,
