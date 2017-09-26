@@ -20,21 +20,23 @@ namespace WifViewer
             this.Documents = new ObservableCollection<DocumentViewModel>();
             this.CurrentDocument = Cell.Create<DocumentViewModel>(null);
 
-            this.NewScript = EnabledCommand.FromDelegate(OnNewScript);
-            this.LoadScript = EnabledCommand.FromDelegate(OnLoadScript);
-            this.LoadWif = EnabledCommand.FromDelegate(OnLoadWif);
+            this.NewScriptCommand = EnabledCommand.FromDelegate(OnNewScript);
+            this.LoadScriptCommand = EnabledCommand.FromDelegate(OnLoadScript);
+            this.LoadWifCommand = EnabledCommand.FromDelegate(OnLoadWif);
+            this.LoadCommand = EnabledCommand.FromDelegate(OnLoad);
         }
 
         public ObservableCollection<DocumentViewModel> Documents { get; }
 
         public Cell<DocumentViewModel> CurrentDocument { get; }
 
+        public ICommand LoadCommand { get; }
 
-        public ICommand LoadScript { get; }
+        public ICommand LoadScriptCommand { get; }
 
-        public ICommand NewScript { get; }
+        public ICommand NewScriptCommand { get; }
 
-        public ICommand LoadWif { get; }
+        public ICommand LoadWifCommand { get; }
 
         private void OnLoadWif()
         {
@@ -48,12 +50,19 @@ namespace WifViewer
 
             if (result == true)
             {
-                var animationVM = new AnimationViewModel();
-                WifLoader.LoadInSeparateThread(fileDialog.FileName, animationVM.CreateReceiver());
+                var path = fileDialog.FileName;
 
-                var viewer = new AnimationWindow(animationVM);
-                viewer.Show();
+                LoadWif(path);
             }
+        }
+
+        private void LoadWif(string path)
+        {
+            var animationVM = new AnimationViewModel();
+            WifLoader.LoadInSeparateThread(path, animationVM.CreateReceiver());
+
+            var viewer = new AnimationWindow(animationVM);
+            viewer.Show();
         }
 
         private void OnNewScript()
@@ -76,10 +85,40 @@ namespace WifViewer
             if (result == true)
             {
                 var path = fileDialog.FileName;
-                var source = File.ReadAllText(fileDialog.FileName);
-                var document = new DocumentViewModel(source, path);
+                LoadScript(path);
+            }
+        }
 
-                AddDocument(document);
+        private void LoadScript(string path)
+        {
+            var source = File.ReadAllText(path);
+            var document = new DocumentViewModel(source, path);
+
+            AddDocument(document);
+        }
+
+        private void OnLoad()
+        {
+            var fileDialog = new OpenFileDialog()
+            {
+                Filter = "Supported Files|*.chai;*.wif|Scripts|*.chai|Renderings|*.wif",
+                CheckFileExists = true
+            };
+
+            var result = fileDialog.ShowDialog();
+
+            if (result == true)
+            {
+                var path = fileDialog.FileName;
+
+                if ( path.ToLower().EndsWith(".wif") )
+                {
+                    LoadWif(path);
+                }
+                else
+                {
+                    LoadScript(path);
+                }
             }
         }
 
