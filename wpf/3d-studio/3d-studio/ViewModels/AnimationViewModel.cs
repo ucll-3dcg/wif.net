@@ -42,12 +42,18 @@ namespace WifViewer.ViewModels
             this.ExportFrame = EnabledCommand.FromDelegate(OnExportFrame);
             this.ExportMovie = CellCommand.FromDelegate(this.IsDoneRendering, OnExportMovie);
             this.CopyFrame = EnabledCommand.FromDelegate(OnCopyFrame);
+            this.PreviousFrame = EnabledCommand.FromDelegate(OnPreviousFrame);
+            this.NextFrame = EnabledCommand.FromDelegate(OnNextFrame);
         }
 
         private void OnToggleAnimation()
         {
             this.Timer.IsEnabled = !this.Timer.IsEnabled;
         }
+
+        public ICommand PreviousFrame { get; }
+
+        public ICommand NextFrame { get; }
 
         public ICommand ToggleAnimation { get; }
 
@@ -207,6 +213,16 @@ namespace WifViewer.ViewModels
                     }
                 });
             }
+        }
+
+        private void OnPreviousFrame()
+        {
+            this.CurrentFrameIndex.Value = (this.CurrentFrameIndex.Value - 1 + this.Frames.Count) % this.Frames.Count;
+        }
+
+        private void OnNextFrame()
+        {
+            this.CurrentFrameIndex.Value = (this.CurrentFrameIndex.Value + 1) % this.Frames.Count;
         }
 
         private class RendererReceiver : IRenderReceiver

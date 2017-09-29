@@ -19,6 +19,8 @@
         <KeyBinding Modifiers="Ctrl" Key="C" Command="{Binding CopyFrame}" />
         <KeyBinding Key="X" Command="{Binding ExportFrame}" />
         <KeyBinding Modifiers="Shift" Key="X" Command="{Binding ExportMovie}" />
+        <KeyBinding Key="Left" Command="{Binding PreviousFrame}" />
+        <KeyBinding Key="Right" Command="{Binding NextFrame}" />
     </Window.InputBindings>
     <Window.WindowStyle>
         <Binding Path="FullScreen.Value">
