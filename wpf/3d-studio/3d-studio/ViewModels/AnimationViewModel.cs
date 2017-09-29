@@ -67,6 +67,18 @@ namespace WifViewer.ViewModels
             }
         }
 
+        public int AnimationSpeed
+        {
+            get
+            {
+                return (int)(1000 / this.Timer.Interval.TotalMilliseconds);
+            }
+            set
+            {
+                this.Timer.Interval = TimeSpan.FromMilliseconds(1000.0 / value);
+            }
+        }
+
         private void OnFrameCollectionChanged()
         {
             this.CurrentFrame.Refresh();

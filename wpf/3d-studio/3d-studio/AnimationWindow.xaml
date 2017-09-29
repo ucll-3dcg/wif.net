@@ -7,7 +7,7 @@
         xmlns:local="clr-namespace:WifViewer"
         xmlns:converters="clr-namespace:WifViewer.Converters"        
         mc:Ignorable="d"
-        Title="AnimationWindow" Height="500" Width="500">
+        Title="AnimationWindow" Height="500" Width="600">
     <Window.Resources>
         <converters:BoolConverter x:Key="toggleAnimatingConverter" True="&#xE103;" False="&#xE102;" />
         <converters:BoolConverter x:Key="stretchConverter" True="Uniform" False="None" />
@@ -63,6 +63,8 @@
                         <Button Style="{StaticResource toolbarIcon}" Content="&#xE8C8;" Command="{Binding CopyFrame}" ToolTip="Copy current frame to clipboard [ctrl-c]" />
                         <Button Style="{StaticResource toolbarIcon}" Content="&#xE799;" Command="{Binding ExportFrame}" ToolTip="Export single frame [x]" />
                         <Button Style="{StaticResource toolbarIcon}" Content="&#xE81E;" Command="{Binding ExportMovie}" ToolTip="Export movie [X]" />
+                        <Slider Minimum="1" Maximum="100" Value="{Binding AnimationSpeed}" Width="100" Margin="5" />
+                        <TextBlock Text="{Binding AnimationSpeed, StringFormat={}{0} fps}" VerticalAlignment="Center" />
                     </ToolBar>
                     <Image Source="{Binding CurrentFrame.Value}" Stretch="{Binding ScaleToFill.Value, Converter={StaticResource stretchConverter}}" />
                 </DockPanel>
