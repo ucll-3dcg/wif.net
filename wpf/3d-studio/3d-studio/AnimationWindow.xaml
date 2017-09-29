@@ -16,6 +16,9 @@
         <KeyBinding Key="Space" Command="{Binding ToggleAnimation}" />
         <KeyBinding Key="S" Command="{Binding ToggleScale}" />
         <KeyBinding Key="F" Command="{Binding ToggleFullScreen}" />
+        <KeyBinding Modifiers="Ctrl" Key="C" Command="{Binding CopyFrame}" />
+        <KeyBinding Key="X" Command="{Binding ExportFrame}" />
+        <KeyBinding Modifiers="Shift" Key="X" Command="{Binding ExportMovie}" />
     </Window.InputBindings>
     <Window.WindowStyle>
         <Binding Path="FullScreen.Value">
@@ -48,15 +51,16 @@
             <TabItem Header="Result" Visibility="Collapsed" x:Name="resultTab">
                 <DockPanel>
                     <ToolBar DockPanel.Dock="Top">
-                        <CheckBox Style="{StaticResource toolbarIcon}" IsChecked="{Binding ScaleToFill.Value}" Content="&#xECE9;" ToolTip="Scale to fit [S]" />
-                        <CheckBox Style="{StaticResource toolbarIcon}" IsChecked="{Binding FullScreen.Value}" Content="&#xE740;" ToolTip="Full screen [F]" />
+                        <CheckBox Style="{StaticResource toolbarIcon}" IsChecked="{Binding ScaleToFill.Value}" Content="&#xECE9;" ToolTip="Scale to fit [s]" />
+                        <CheckBox Style="{StaticResource toolbarIcon}" IsChecked="{Binding FullScreen.Value}" Content="&#xE740;" ToolTip="Full screen [f]" />
                         <TextBlock Text="{Binding CurrentFrameIndex.Value}" Width="20" Margin="5" TextAlignment="Center" />
                         <TextBlock Text="of" Margin="5" />
                         <TextBlock Text="{Binding MaximumFrameIndex.Value}" Width="20" Margin="5" TextAlignment="Center" />
                         <Slider Minimum="0" Maximum="{Binding MaximumFrameIndex.Value}" Value="{Binding CurrentFrameIndex.Value}" Width="100" Margin="5" />
                         <CheckBox Style="{StaticResource toolbarIcon}" IsChecked="{Binding Timer.IsEnabled}" Content="{Binding Timer.IsEnabled, Converter={StaticResource toggleAnimatingConverter}}" FontFamily="Segoe MDL2 Assets" ToolTip="Toggle Animation [Space]" />
-                        <Button Style="{StaticResource toolbarIcon}" Content="&#xE799;" Command="{Binding ExportFrame}" ToolTip="Export single frame" />
-                        <Button Style="{StaticResource toolbarIcon}" Content="&#xE81E;" Command="{Binding ExportMovie}" ToolTip="Export movie" />
+                        <Button Style="{StaticResource toolbarIcon}" Content="&#xE799;" Command="{Binding CopyFrame}" ToolTip="Copy current frame to clipboard [ctrl-c]" />
+                        <Button Style="{StaticResource toolbarIcon}" Content="&#xE799;" Command="{Binding ExportFrame}" ToolTip="Export single frame [x]" />
+                        <Button Style="{StaticResource toolbarIcon}" Content="&#xE81E;" Command="{Binding ExportMovie}" ToolTip="Export movie [X]" />
                     </ToolBar>
                     <Image Source="{Binding CurrentFrame.Value}" Stretch="{Binding ScaleToFill.Value, Converter={StaticResource stretchConverter}}" />
                 </DockPanel>

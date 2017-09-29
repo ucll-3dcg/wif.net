@@ -41,6 +41,7 @@ namespace WifViewer.ViewModels
             this.ToggleFullScreen = EnabledCommand.CreateTogglingCommand(FullScreen);
             this.ExportFrame = EnabledCommand.FromDelegate(OnExportFrame);
             this.ExportMovie = CellCommand.FromDelegate(this.IsDoneRendering, OnExportMovie);
+            this.CopyFrame = EnabledCommand.FromDelegate(OnCopyFrame);
         }
 
         private void OnToggleAnimation()
@@ -119,9 +120,16 @@ namespace WifViewer.ViewModels
 
         public ICommand ExportMovie { get; }
 
+        public ICommand CopyFrame { get; }
+
         public IRenderReceiver CreateReceiver()
         {
             return new RendererReceiver(this);
+        }
+
+        private void OnCopyFrame()
+        {
+            Clipboard.SetImage(this.CurrentFrame.Value);
         }
 
         private void OnExportFrame()
