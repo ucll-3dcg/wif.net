@@ -14,7 +14,8 @@
     <Window.InputBindings>
         <KeyBinding Modifiers="Ctrl" Key="N" Command="{Binding NewScriptCommand}" />
         <KeyBinding Modifiers="Ctrl" Key="O" Command="{Binding LoadScriptCommand}" />
-        <KeyBinding Modifiers="Ctrl" Key="S" Command="{Binding CurrentDocument.Value.SaveScript}" />
+        <KeyBinding Modifiers="Ctrl" Key="S" Command="{Binding CurrentDocument.Value.SaveScriptCommand}" />
+        <KeyBinding Modifiers="Shift+Ctrl" Key="S" Command="{Binding CurrentDocument.Value.SaveScriptAsCommand}" />
         <KeyBinding Key="F5" Command="{Binding CurrentDocument.Value.RenderScript}" />
     </Window.InputBindings>
     <DockPanel>
@@ -22,7 +23,8 @@
             <MenuItem Header="_Script">
                 <MenuItem Header="_New" InputGestureText="Ctrl+N" Command="{Binding NewScriptCommand}" />
                 <MenuItem Header="_Open" InputGestureText="Ctrl+O" Command="{Binding LoadScriptCommand}" />
-                <MenuItem Header="_Save" InputGestureText="Ctrl+S" Command="{Binding CurrentDocument.Value.SaveScript}" />
+                <MenuItem Header="_Save" InputGestureText="Ctrl+S" Command="{Binding CurrentDocument.Value.SaveScriptCommand}" />
+                <MenuItem Header="_Save as" InputGestureText="Shift+Ctrl+S" Command="{Binding CurrentDocument.Value.SaveScriptAsCommand}" />
                 <Separator />
                 <MenuItem Header="E_xit" InputGestureText="Alt+F4" />
             </MenuItem>
@@ -33,9 +35,9 @@
         <ToolBar DockPanel.Dock="Top">
             <Button Style="{StaticResource toolbarIcon}" Content="&#xE8F4;" ToolTip="New Script [Ctrl+N]" Command="{Binding NewScriptCommand}" />
             <Button Style="{StaticResource toolbarIcon}" Content="&#xE8E5;" ToolTip="Open [Ctrl+O]" Command="{Binding LoadCommand}" />
-            <Button Style="{StaticResource toolbarIcon}" Content="&#xE74E;" ToolTip="Save Script [Ctrl+S]" Command="{Binding CurrentDocument.Value.SaveScript}" />
-            <Button Style="{StaticResource toolbarIcon}" Content="&#xE792;" ToolTip="Save Script as" Command="{Binding CurrentDocument.Value.SaveScriptAs}" />
-            <Button Style="{StaticResource toolbarIcon}" Content="&#xE786;" ToolTip="Render" Command="{Binding CurrentDocument.Value.RenderScript}" />
+            <Button Style="{StaticResource toolbarIcon}" Content="&#xE74E;" ToolTip="Save Script [Ctrl+S]" Command="{Binding CurrentDocument.Value.SaveScriptCommand}" />
+            <Button Style="{StaticResource toolbarIcon}" Content="&#xE792;" ToolTip="Save Script as [Shift+Control+S]" Command="{Binding CurrentDocument.Value.SaveScriptAsCommand}" />
+            <Button Style="{StaticResource toolbarIcon}" Content="&#xE786;" ToolTip="Render [F5]" Command="{Binding CurrentDocument.Value.RenderScript}" />
         </ToolBar>
         <TabControl ItemsSource="{Binding Documents}" SelectedItem="{Binding CurrentDocument.Value}">
             <TabControl.ItemTemplate>

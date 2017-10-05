@@ -26,8 +26,8 @@ namespace WifViewer
             this.Source = new TextDocument(contents);
             this.Path = Cell.Create(path);
             this.ShortPath = Cell.Derived(this.Path, DeriveShortPath);
-            this.SaveScript = EnabledCommand.FromDelegate(OnSaveScript);
-            this.SaveScriptAs = EnabledCommand.FromDelegate(OnSaveScriptAs);
+            this.SaveScriptCommand = EnabledCommand.FromDelegate(OnSaveScript);
+            this.SaveScriptAsCommand = EnabledCommand.FromDelegate(OnSaveScriptAs);
             this.RenderScript = EnabledCommand.FromDelegate(OnRenderScript);
             this.IsDirty = Cell.Create(false);
             this.Source.Changed += (s, e) => OnSourceChanged();
@@ -53,9 +53,9 @@ namespace WifViewer
             }
         }
 
-        public ICommand SaveScript { get; }
+        public ICommand SaveScriptCommand { get; }
 
-        public ICommand SaveScriptAs { get; }
+        public ICommand SaveScriptAsCommand { get; }
 
         public ICommand RenderScript { get; }
 
@@ -66,6 +66,11 @@ namespace WifViewer
 
         private void OnRenderScript()
         {
+            if ( HasFilename() )
+            {
+                Save();
+            }
+
             var animationVM = new AnimationViewModel();
             var raytracer = new Renderer();
             var receiver = animationVM.CreateReceiver();
@@ -75,16 +80,26 @@ namespace WifViewer
             viewer.Show();
         }
 
+        private bool HasFilename()
+        {
+            return this.Path.Value != "untitled";
+        }
+
+        private void Save()
+        {
+            File.WriteAllText(this.Path.Value, this.SourceString);
+            this.IsDirty.Value = false;
+        }
+
         private void OnSaveScript()
         {
-            if (this.Path.Value == "untitled")
+            if (!HasFilename())
             {
                 OnSaveScriptAs();
             }
             else
             {
-                File.WriteAllText(this.Path.Value, this.SourceString);
-                this.IsDirty.Value = false;
+                Save();
             }
         }
 
