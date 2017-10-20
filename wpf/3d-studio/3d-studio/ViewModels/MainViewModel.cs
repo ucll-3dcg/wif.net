@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using WifViewer.ViewModels;
 
-namespace WifViewer
+namespace WifViewer.ViewModels
 {
     public class MainViewModel
     {
@@ -24,6 +24,7 @@ namespace WifViewer
             this.LoadScriptCommand = EnabledCommand.FromDelegate(OnLoadScript);
             this.LoadWifCommand = EnabledCommand.FromDelegate(OnLoadWif);
             this.LoadCommand = EnabledCommand.FromDelegate(OnLoad);
+            this.ConfigureCommand = EnabledCommand.FromDelegate(OnConfigure);
         }
 
         public ObservableCollection<DocumentViewModel> Documents { get; }
@@ -37,6 +38,8 @@ namespace WifViewer
         public ICommand NewScriptCommand { get; }
 
         public ICommand LoadWifCommand { get; }
+
+        public ICommand ConfigureCommand { get; }
 
         private void OnLoadWif()
         {
@@ -80,9 +83,7 @@ namespace WifViewer
                 CheckFileExists = true
             };
 
-            var result = fileDialog.ShowDialog();
-
-            if (result == true)
+            if (fileDialog.ShowDialog() == true)
             {
                 var path = fileDialog.FileName;
                 LoadScript(path);
@@ -111,7 +112,7 @@ namespace WifViewer
             {
                 var path = fileDialog.FileName;
 
-                if ( path.ToLower().EndsWith(".wif") )
+                if (path.ToLower().EndsWith(".wif"))
                 {
                     LoadWif(path);
                 }
@@ -126,6 +127,13 @@ namespace WifViewer
         {
             this.Documents.Add(document);
             this.CurrentDocument.Value = document;
+        }
+
+        private void OnConfigure()
+        {
+            var window = new ConfigurationWindow();
+
+            window.ShowDialog();
         }
     }
 }

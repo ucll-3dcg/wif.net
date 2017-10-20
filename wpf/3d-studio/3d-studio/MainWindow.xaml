@@ -38,6 +38,7 @@
             <Button Style="{StaticResource toolbarIcon}" Content="&#xE74E;" ToolTip="Save Script [Ctrl+S]" Command="{Binding CurrentDocument.Value.SaveScriptCommand}" />
             <Button Style="{StaticResource toolbarIcon}" Content="&#xE792;" ToolTip="Save Script as [Shift+Control+S]" Command="{Binding CurrentDocument.Value.SaveScriptAsCommand}" />
             <Button Style="{StaticResource toolbarIcon}" Content="&#xE786;" ToolTip="Render [F5]" Command="{Binding CurrentDocument.Value.RenderScript}" />
+            <Button Style="{StaticResource toolbarIcon}" Content="&#xE713;" ToolTip="Configuration" Command="{Binding ConfigureCommand}" /> 
         </ToolBar>
         <TabControl ItemsSource="{Binding Documents}" SelectedItem="{Binding CurrentDocument.Value}">
             <TabControl.ItemTemplate>

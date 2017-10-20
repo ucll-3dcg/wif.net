@@ -8,11 +8,12 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 using WifViewer.Rendering;
 using WifViewer.ViewModels;
 
-namespace WifViewer
+namespace WifViewer.ViewModels
 {
     public class DocumentViewModel
     {
@@ -66,7 +67,7 @@ namespace WifViewer
 
         private void OnRenderScript()
         {
-            if ( HasFilename() )
+            if ( HasFilename() && Configuration.AUTO_SAVE )
             {
                 Save();
             }
@@ -74,10 +75,18 @@ namespace WifViewer
             var animationVM = new AnimationViewModel();
             var raytracer = new Renderer();
             var receiver = animationVM.CreateReceiver();
-            raytracer.Render(this.Source.Text, receiver);
 
-            var viewer = new AnimationWindow(animationVM);
-            viewer.Show();
+            try
+            {
+                raytracer.Render(this.Source.Text, receiver);
+
+                var viewer = new AnimationWindow(animationVM);
+                viewer.Show();
+            }
+            catch ( Exception e )
+            {
+                MessageBox.Show(e.Message);
+            }
         }
 
         private bool HasFilename()

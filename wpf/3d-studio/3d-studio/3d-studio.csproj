@@ -75,8 +75,11 @@
     <Compile Include="Cells\Var.cs" />
     <Compile Include="Commands\CellCommand.cs" />
     <Compile Include="Commands\EnabledCommand.cs" />
+    <Compile Include="ConfigurationWindow.xaml.cs">
+      <DependentUpon>ConfigurationWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Converters\BoolConverter.cs" />
-    <Compile Include="DocumentViewModel.cs" />
+    <Compile Include="ViewModels\DocumentViewModel.cs" />
     <Compile Include="MovieExporter.cs" />
     <Compile Include="Rendering\Base64Decoder.cs" />
     <Compile Include="Rendering\BitmapDecoder.cs" />
@@ -87,11 +90,16 @@
     <Compile Include="Rendering\IRenderReceiver.cs" />
     <Compile Include="Rendering\Renderer.cs" />
     <Compile Include="ViewModels\AnimationViewModel.cs" />
+    <Compile Include="ViewModels\ConfigurationViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="WifLoader.cs" />
     <Page Include="AnimationWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ConfigurationWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>

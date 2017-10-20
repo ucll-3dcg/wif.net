@@ -21,6 +21,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
 using System.Xml;
+using WifViewer.ViewModels;
 
 namespace WifViewer
 {
