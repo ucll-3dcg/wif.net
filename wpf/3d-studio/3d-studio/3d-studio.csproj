@@ -7,7 +7,7 @@
     <ProjectGuid>{41BBC618-8DCA-4E0B-9AD6-D37004D8CFFD}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>_3d_studio</RootNamespace>
+    <RootNamespace>WifViewer</RootNamespace>
     <AssemblyName>3d-studio</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>

@@ -36,6 +36,13 @@ namespace WifViewer
                     tabControl.SelectedIndex = 0;
                 }
             };         
-        }        
+        }
+
+        protected override void OnClosed(EventArgs e)
+        {
+            this.DataContext = null;
+
+            base.OnClosed(e);
+        }
     }
 }
