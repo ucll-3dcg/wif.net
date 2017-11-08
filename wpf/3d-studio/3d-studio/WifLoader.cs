@@ -66,7 +66,6 @@ namespace WifViewer
 
                     buffer = new byte[3 * width * height];
                     fileStream.Read(buffer, 0, buffer.Length);
-                    buffer = null;
 
                     var bitmap = new WriteableBitmap((int)width, (int)height, 96, 96, PixelFormats.Rgb24, null);
                     var rect = new Int32Rect(0, 0, (int)width, (int)height);
