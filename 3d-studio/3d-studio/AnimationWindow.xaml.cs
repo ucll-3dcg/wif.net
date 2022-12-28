@@ -40,6 +40,8 @@ namespace WifViewer
 
         protected override void OnClosed(EventArgs e)
         {
+            (this.DataContext as AnimationViewModel)?.OnClose();
+
             this.DataContext = null;
 
             base.OnClosed(e);

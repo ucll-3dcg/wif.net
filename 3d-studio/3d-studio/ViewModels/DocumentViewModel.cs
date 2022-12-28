@@ -72,8 +72,8 @@ namespace WifViewer.ViewModels
                 Save();
             }
 
-            var animationVM = new AnimationViewModel();
             var raytracer = new Renderer();
+            var animationVM = new AnimationViewModel(raytracer);
             var receiver = animationVM.CreateReceiver();
 
             try

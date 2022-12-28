@@ -31,7 +31,7 @@ namespace WifViewer.Rendering
             var base64Decoder = new Base64Decoder(bitmapDecoder);
             var blockDecoder = new BlockDecoder(base64Decoder);
 
-            var process = new ExternalProcess()
+            this.process = new ExternalProcess()
             {
                 ExecutablePath = Configuration.RAYTRACER_PATH,
                 CommandLineArguments = "-s -",
@@ -41,7 +41,14 @@ namespace WifViewer.Rendering
                 OnExited = receiver.RenderingDone
             };
 
-            process.Start();
+            this.process.Start();
+        }
+
+        private ExternalProcess process;
+
+        public void Stop()
+        {
+            process.Stop();
         }
     }
 }

@@ -20,7 +20,7 @@ namespace WifViewer.ViewModels
 {
     public class AnimationViewModel
     {
-        public AnimationViewModel()
+        public AnimationViewModel(Renderer renderer = null)
         {
             this.Timer = new DispatcherTimer(TimeSpan.FromMilliseconds(50), DispatcherPriority.Background, (o, e) => OnTimerTick(), Application.Current.Dispatcher)
             {
@@ -44,12 +44,15 @@ namespace WifViewer.ViewModels
             this.CopyFrame = EnabledCommand.FromDelegate(OnCopyFrame);
             this.PreviousFrame = EnabledCommand.FromDelegate(OnPreviousFrame);
             this.NextFrame = EnabledCommand.FromDelegate(OnNextFrame);
+            this.renderer = renderer;
         }
 
         private void OnToggleAnimation()
         {
             this.Timer.IsEnabled = !this.Timer.IsEnabled;
         }
+
+        private readonly Renderer renderer;
 
         public ICommand PreviousFrame { get; }
 
@@ -235,6 +238,11 @@ namespace WifViewer.ViewModels
         private void OnNextFrame()
         {
             this.CurrentFrameIndex.Value = (this.CurrentFrameIndex.Value + 1) % this.Frames.Count;
+        }
+
+        public void OnClose()
+        {
+            this.renderer?.Stop();
         }
 
         private class RendererReceiver : IRenderReceiver
