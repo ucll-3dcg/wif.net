@@ -21,10 +21,11 @@ namespace WifViewer.Rendering
 
         public Action OnExited { get; set; }
 
+        private Process process;
 
         public void Start()
         {
-            var process = new Process();
+            process = new Process();
             process.StartInfo.FileName = this.ExecutablePath;
             process.StartInfo.Arguments = this.CommandLineArguments;
             process.StartInfo.CreateNoWindow = true;
@@ -48,6 +49,12 @@ namespace WifViewer.Rendering
 
             process.BeginOutputReadLine();
             process.BeginErrorReadLine();
+        }
+
+        public void Stop()
+        {
+            if (process != null && !process.HasExited)
+                process.Kill();
         }
     }
 
